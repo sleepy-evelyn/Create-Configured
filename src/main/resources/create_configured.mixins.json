@@ -1,9 +1,13 @@
 {
   "required": true,
-  "package": "dev.sleepy_evelyn.mph.mixin",
+  "package": "dev.sleepy_evelyn.create_configured.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "create.TrainMixin"
+    "SpoutBlockEntityMixin",
+    "TrainMixin"
+  ],
+  "client": [
+    "client.ScheduleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

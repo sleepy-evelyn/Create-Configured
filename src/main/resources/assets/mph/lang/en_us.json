@@ -1,7 +1,11 @@
 {
-  "mph.configuration.title": "Mod Performance Hacks Configs",
-  "mph.configuration.section.mph.common.toml": "Mod Performance Hacks Configs",
-  "mph.configuration.section.mph.common.toml.title": "Mod Performance Hacks Configs",
-  "mph.configuration.createTrainCollisions": "Train Collisions",
-  "mph.configuration.createReduceTrainNavCalls": "Reduce Train Navigation Calls"
+  "create_configured.configuration.title": "Mod Performance Hacks Configs",
+  "create_configured.configuration.section.mph.common.toml": "Mod Performance Hacks Configs",
+  "create_configured.configuration.section.mph.common.toml.title": "Mod Performance Hacks Configs",
+  "create_configured.configuration.createTrainCollisions": "Train Collisions",
+  "create_configured.configuration.createReduceTrainNavCalls": "Reduce Train Navigation Calls",
+  "create_configured.configuration.createCacheUnfillableItems": "Cache Unfillable Items",
+  "item.create_configured.repeating_schedule": "Repeating Schedule",
+  "create_configured.gui.schedule.cyclic_disabled": "Schedule can't be Repeated",
+  "create_configured.gui.schedule.cyclic_enabled": "Schedule Repeats"
 }
