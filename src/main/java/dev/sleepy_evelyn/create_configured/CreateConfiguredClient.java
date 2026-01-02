@@ -8,6 +8,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = CreateConfigured.MOD_ID, dist = Dist.CLIENT)
 public class CreateConfiguredClient {
+
     public CreateConfiguredClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }

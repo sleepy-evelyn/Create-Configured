@@ -1,0 +1,8 @@
+{
+  "create_configured.configuration.trainCollisions": "Train Collisions",
+  "create_configured.configuration.cacheUnfillableItems": "Cache Unfillable Items",
+  "create_configured.configuration.requestLoopedSchedules": "Request Looped Schedules",
+  "create_configured.configuration.trainScheduleApprovers": "Train Schedule Approvers",
+  "item.create_configured.single_run_train_schedule": "Single Run Train Schedule",
+  "create_configured.gui.schedule.request_repeating_schedule": "Request a Looping Schedule"
+}

@@ -1,7 +1,6 @@
 package dev.sleepy_evelyn.create_configured;
 
 import com.mojang.logging.LogUtils;
-import com.simibubi.create.content.trains.schedule.ScheduleScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -15,7 +14,7 @@ public class CreateConfigured {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateConfigured(IEventBus modEventBus, ModContainer modContainer) {
-        modContainer.registerConfig(ModConfig.Type.COMMON, CreateConfiguredConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, CreateConfiguredConfig.SPEC);
     }
 
     public static ResourceLocation rl(String path) {

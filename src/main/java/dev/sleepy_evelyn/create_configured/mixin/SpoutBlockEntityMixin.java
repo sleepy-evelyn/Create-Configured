@@ -26,15 +26,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.HOLD;
 import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.PASS;
 
-@Restriction(
-        require = {
-                @Condition(value = "create", versionPredicates = ">=6.0.2")
-        }
-)
 @Mixin(SpoutBlockEntity.class)
 public abstract class SpoutBlockEntityMixin extends SmartBlockEntity {
 
-    @Unique private final TickedCacheSet<ResourceLocation> mph$unfillableItems = new TickedCacheSet<>(1000, 20 * 60 * 5);
+    @Unique private final TickedCacheSet<ResourceLocation> cc$unfillableItems = new TickedCacheSet<>(1000, 20 * 60 * 5);
     @Shadow SmartFluidTankBehaviour tank;
 
     public SpoutBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -49,20 +44,21 @@ public abstract class SpoutBlockEntityMixin extends SmartBlockEntity {
             ),
             cancellable = true
     )
-    protected void mph$recipeItemStackCache(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler, CallbackInfoReturnable<BeltProcessingBehaviour.ProcessingResult> cir) {
-        if (CreateConfiguredConfig.CACHE_UNFILLABLE_ITEMS.getAsBoolean()) mph$cacheUnfillableItems(transported, cir);
+    private void recipeItemStackCache(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler, CallbackInfoReturnable<BeltProcessingBehaviour.ProcessingResult> cir) {
+        if (CreateConfiguredConfig.CACHE_UNFILLABLE_ITEMS.getAsBoolean()) cc$cacheUnfillableItems(transported, cir);
     }
 
-    @Unique private void mph$cacheUnfillableItems(TransportedItemStack transported, CallbackInfoReturnable<BeltProcessingBehaviour.ProcessingResult> cir) {
+    @Unique
+    private void cc$cacheUnfillableItems(TransportedItemStack transported, CallbackInfoReturnable<BeltProcessingBehaviour.ProcessingResult> cir) {
         var transportedStack = transported.stack;
         var stackId = BuiltInRegistries.ITEM.getKey(transportedStack.getItem());
 
-        mph$unfillableItems.tick();
+        cc$unfillableItems.tick();
 
-        if (mph$unfillableItems.contains(stackId))
+        if (cc$unfillableItems.contains(stackId))
             cir.setReturnValue(PASS);
         else if (!FillingBySpout.canItemBeFilled(level, transportedStack)) {
-            mph$unfillableItems.add(stackId);
+            cc$unfillableItems.add(stackId);
             cir.setReturnValue(PASS);
         }
 

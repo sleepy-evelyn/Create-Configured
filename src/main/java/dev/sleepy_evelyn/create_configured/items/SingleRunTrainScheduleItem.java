@@ -1,11 +1,10 @@
 package dev.sleepy_evelyn.create_configured.items;
 
 import com.simibubi.create.content.trains.schedule.ScheduleItem;
-import net.minecraft.client.renderer.item.ItemProperties;
 
-public class RepeatingScheduleItem extends ScheduleItem {
+public class SingleRunTrainScheduleItem extends ScheduleItem {
 
-    public RepeatingScheduleItem() {
+    public SingleRunTrainScheduleItem() {
         super(new Properties());
     }
 }

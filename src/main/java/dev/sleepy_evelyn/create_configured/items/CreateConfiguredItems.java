@@ -16,7 +16,7 @@ public final class CreateConfiguredItems {
         e.register(
                 Registries.ITEM,
                 registry ->
-                        registry.register(rl("repeating_schedule"), new RepeatingScheduleItem())
+                        registry.register(rl("single_run_train_schedule"), new SingleRunTrainScheduleItem())
         );
     }
 }
