@@ -19,19 +19,13 @@ public class CCConfigs {
     private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
 
     private static CCServerConfig serverConfig;
-    private static CCClientConfig clientConfig;
 
     public static CCServerConfig server() {
         return serverConfig;
     }
 
-    public static CCClientConfig client() {
-        return clientConfig;
-    }
-
     public static void register(ModContainer container) {
         serverConfig = register(CCServerConfig::new, ModConfig.Type.SERVER);
-        clientConfig = register(CCClientConfig::new, ModConfig.Type.CLIENT);
 
         for (Map.Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
             container.registerConfig(pair.getKey(), pair.getValue().specification);
