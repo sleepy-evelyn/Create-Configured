@@ -3,9 +3,7 @@ package dev.sleepy_evelyn.create_configured.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.trains.entity.Train;
-import dev.sleepy_evelyn.create_configured.CreateConfiguredConfig;
-import me.fallenbreath.conditionalmixin.api.annotation.Condition;
-import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
+import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -24,6 +22,6 @@ public abstract class TrainMixin {
             )
     )
     private Pair<Train, Vec3> removeTrainCollisions(Train instance, Level otherLeading, Vec3 otherTrailing, Vec3 otherDimension, ResourceKey<Level> start2, Operation<Pair<Train, Vec3>> original) {
-        return (CreateConfiguredConfig.TRAIN_COLLISIONS.getAsBoolean()) ? original.call(instance, otherLeading, otherTrailing, otherDimension, start2) : null;
+        return (CCConfigs.server().trainCollisions.get()) ? original.call(instance, otherLeading, otherTrailing, otherDimension, start2) : null;
     }
 }

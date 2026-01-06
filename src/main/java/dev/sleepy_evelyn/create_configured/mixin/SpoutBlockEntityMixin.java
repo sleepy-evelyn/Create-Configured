@@ -7,10 +7,9 @@ import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackH
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import dev.sleepy_evelyn.create_configured.CreateConfiguredConfig;
+import dev.sleepy_evelyn.create_configured.CreateConfigured;
+import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import dev.sleepy_evelyn.create_configured.utils.TickedCacheSet;
-import me.fallenbreath.conditionalmixin.api.annotation.Condition;
-import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +44,7 @@ public abstract class SpoutBlockEntityMixin extends SmartBlockEntity {
             cancellable = true
     )
     private void recipeItemStackCache(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler, CallbackInfoReturnable<BeltProcessingBehaviour.ProcessingResult> cir) {
-        if (CreateConfiguredConfig.CACHE_UNFILLABLE_ITEMS.getAsBoolean()) cc$cacheUnfillableItems(transported, cir);
+        if (CCConfigs.server().cacheUnfillableItems.get()) cc$cacheUnfillableItems(transported, cir);
     }
 
     @Unique
