@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 public enum Mods {
     GRIEFLOGGER("Grief Logger"),
-    LUCKPERMS("Luckperms");
+    OPENPARTIESANDCLAIMS("Open Parties & Claims");
 
     private final String id;
     private final String modName;

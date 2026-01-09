@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.compat;
+package dev.sleepy_evelyn.create_configured.compat.grieflogger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

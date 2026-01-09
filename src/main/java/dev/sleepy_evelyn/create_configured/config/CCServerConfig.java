@@ -12,7 +12,7 @@ public class CCServerConfig extends ConfigBase {
             "Introduces a cache for items that cannot be used in filling recipes");
 
     public final ConfigBool lockTrainDisassembly = b(true, "lockTrainDisassembly",
-            "Only a trains owner, an operator, or a player / group with appropriate permission may disassemble a train");
+            "Allows players to lock train disassembly for individual trains");
 
     /*public final ConfigBool requestLoopedSchedules = b(true, "requestLoopedSchedules",
             "Require manual approval for looping schedules");*/

@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.compat;
+package dev.sleepy_evelyn.create_configured.compat.grieflogger;
 
 import com.daqem.grieflogger.event.block.LogBlockEvent;
 import com.daqem.grieflogger.model.action.BlockAction;

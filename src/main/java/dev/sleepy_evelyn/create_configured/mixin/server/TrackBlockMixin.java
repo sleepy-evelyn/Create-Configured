@@ -27,9 +27,11 @@ public class TrackBlockMixin {
         var level = ctx.getLevel();
 
         if (ctx.getPlayer() instanceof ServerPlayer serverPlayer) {
-            if (griefLogger().isInspecting(serverPlayer))
+            var griefLogger = griefLogger().orElseThrow();
+
+            if (griefLogger.isInspecting(serverPlayer))
                 cir.setReturnValue(InteractionResult.FAIL);
-            griefLogger().logBreakBlock(serverPlayer, level, state, ctx.getClickedPos());
+            griefLogger.logBreakBlock(serverPlayer, level, state, ctx.getClickedPos());
         }
     }
 }

@@ -3,6 +3,7 @@ package dev.sleepy_evelyn.create_configured.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.trains.station.*;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import dev.sleepy_evelyn.create_configured.client.CreateConfiguredClient;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.GuiTaggable;
@@ -22,6 +23,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
     @Unique private static final String CC$DISASSEMBLY_BUTTON_TAG = "disassemble_train";
 
     @Shadow private IconButton disassembleTrainButton;
+    @Unique private IconButton cc$disassemblyLockButton;
 
     public StationScreenMixin(StationBlockEntity be, GlobalStation station) {
         super(be, station);
@@ -30,6 +32,9 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
     @Inject(method = "init()V", at = @At("TAIL"))
     private void StationScreen(CallbackInfo ci) {
         ((GuiTaggable) disassembleTrainButton).cc$setTag(CC$DISASSEMBLY_BUTTON_TAG);
+
+        /*cc$disassemblyLockButton = new IconButton(guiLeft + 52, guiTop + 65, AllGuiTextures.STOCK_KEEPER_REQUEST_LOCKED);
+        addRenderableWidget(cc$disassemblyLockButton);*/
     }
 
     @WrapOperation(

@@ -4,7 +4,7 @@ import dev.sleepy_evelyn.create_configured.CreateConfigured;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 @EventBusSubscriber(modid = CreateConfigured.MOD_ID)
 public class UnfillableItemsCache extends TickedCacheSet<ResourceLocation> {
@@ -16,7 +16,7 @@ public class UnfillableItemsCache extends TickedCacheSet<ResourceLocation> {
     }
 
     @SubscribeEvent
-    public static void onRecipesReload(RecipesUpdatedEvent e) {
+    public static void onRecipesReload(AddReloadListenerEvent e) {
         INSTANCE.clearAndReset();
     }
 }

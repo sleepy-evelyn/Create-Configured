@@ -111,6 +111,7 @@ configurations {
 }
 
 dependencies {
+    // Create & libraries
     implementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
     implementation("net.createmod.ponder:ponder-neoforge:$ponder_version+mc$minecraft_version")
     compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
@@ -118,7 +119,10 @@ dependencies {
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
     jarJar(implementation("me.fallenbreath:conditional-mixin-neoforge:${conditional_mixin_version}"))
+
+    // Optional dependencies
     compileOnly("maven.modrinth:grieflogger:${grief_logger_version}-${minecraft_version}-neoforge")
+    compileOnly("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
 
     localRuntime("maven.modrinth:grieflogger:${grief_logger_version}-${minecraft_version}-neoforge")
     localRuntime("maven.modrinth:architectury-api:${architectury_api_version}+neoforge")
