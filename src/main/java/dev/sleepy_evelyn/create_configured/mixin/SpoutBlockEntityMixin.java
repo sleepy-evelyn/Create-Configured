@@ -48,6 +48,7 @@ public abstract class SpoutBlockEntityMixin extends SmartBlockEntity {
     }
 
     @Unique
+    @SuppressWarnings("DataFlowIssue")
     private void cc$cacheUnfillableItems(TransportedItemStack transported, CallbackInfoReturnable<BeltProcessingBehaviour.ProcessingResult> cir) {
         var transportedStack = transported.stack;
         var stackId = BuiltInRegistries.ITEM.getKey(transportedStack.getItem());

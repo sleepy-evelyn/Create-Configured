@@ -23,7 +23,8 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum Mods {
-    GRIEFLOGGER("Grief Logger");
+    GRIEFLOGGER("Grief Logger"),
+    LUCKPERMS("Luckperms");
 
     private final String id;
     private final String modName;

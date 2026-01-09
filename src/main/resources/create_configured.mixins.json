@@ -7,6 +7,15 @@
     "TrackBlockMixin",
     "TrainMixin"
   ],
+  "server": [
+    "server.StationBlockEntityMixin",
+    "server.StationBlockMixin"
+  ],
+  "client": [
+    "client.IconButtonMixin",
+    "client.ScheduleScreenMixin",
+    "client.StationScreenMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
