@@ -1,0 +1,21 @@
+{
+  "create_configured.configuration.trainCollisions": "Train Collisions",
+  "create_configured.configuration.cacheUnfillableItems": "Cache Unfillable Items",
+  "create_configured.configuration.requestLoopedSchedules": "Request Looped Schedules",
+  "create_configured.configuration.trainScheduleApprovers": "Train Schedule Approvers",
+  "item.create_configured.single_run_train_schedule": "Single Run Train Schedule",
+
+  "create_configured.gui.schedule.request_repeating_schedule": "Request a Looping Schedule",
+  "create_configured.gui.station.disassembly_lock.denied": "Can't change disassembly lock as you are not the Trains owner",
+  "create_configured.gui.station.disassembly_lock.locked.title": "Train disassembly is locked",
+  "create_configured.gui.station.disassembly_lock.locked.description": "Only you can disassemble this train",
+  "create_configured.gui.station.disassembly_lock.not_locked.title": "Train disassembly is unlocked",
+  "create_configured.gui.station.disassembly_lock.not_locked.description": "Any Player can disassemble this train",
+  "create_configured.gui.station.disassembly_lock.party_members.title": "Train disassembly limited to Party Members",
+  "create_configured.gui.station.disassembly_lock.party_members.description": "Only yourself and Party Members can disassemble this train",
+  "create_configured.gui.tooltip.switch_state": "Click to switch state",
+
+  "create_configured.permission.bypass_train_disassembly.title": "Bypass Train Disassembly Lock",
+  "create_configured.permission.bypass_train_disassembly.description": "Allows bypassing the train disassembly lock if it's enabled",
+  "create_configured.message.train_disassembly_denied": "Can't disassemble as you are not the trains owner"
+}
