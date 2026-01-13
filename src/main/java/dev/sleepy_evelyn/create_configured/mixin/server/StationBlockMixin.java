@@ -2,7 +2,9 @@ package dev.sleepy_evelyn.create_configured.mixin.server;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.station.StationBlock;
+import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.DisassemblyLockable;
 import dev.sleepy_evelyn.create_configured.network.BypassTrainDisassemblyPayload;
 import dev.sleepy_evelyn.create_configured.utils.PermissionChecks;
 import net.minecraft.core.BlockPos;

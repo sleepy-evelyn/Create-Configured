@@ -32,7 +32,6 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
 
     @Unique private int cc$lockX, cc$lockY;
     @Unique private TrainDisassemblyLock cc$disassemblyLock = TrainDisassemblyLock.NOT_LOCKED;
-
     @Shadow private IconButton disassembleTrainButton;
 
     public StationScreenMixin(StationBlockEntity be, GlobalStation station) {

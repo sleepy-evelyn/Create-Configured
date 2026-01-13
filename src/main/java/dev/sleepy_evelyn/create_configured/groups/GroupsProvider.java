@@ -1,11 +1,11 @@
 package dev.sleepy_evelyn.create_configured.groups;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface GroupsProvider {
     String id();
-    Optional<MemberRank> getMemberRank(Player player, UUID targetPlayer);
+    Optional<MemberRank> getMemberRank(MinecraftServer server, UUID player, UUID targetPlayer);
 }
