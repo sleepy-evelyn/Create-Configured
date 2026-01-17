@@ -10,11 +10,9 @@ import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.DisassemblyLo
 import dev.sleepy_evelyn.create_configured.permissions.CCPermissionNodes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

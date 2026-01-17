@@ -8,8 +8,7 @@
   "server": [
     "server.MixinWrenchItem",
     "server.TrainMixin",
-    "server.StationBlockEntityMixin",
-    "server.TrackBlockMixin"
+    "server.StationBlockEntityMixin"
   ],
   "client": [
     "client.IconButtonMixin",

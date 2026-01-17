@@ -124,13 +124,12 @@ dependencies {
     // Optional dependencies
     compileOnly("maven.modrinth:grieflogger:${grief_logger_version}-${minecraft_version}-neoforge")
     compileOnly("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
-    // compileOnly("maven.modrinth:create-steam-n-rails-${minecraft_version}:${snr_neoforge_version}+neoforge-mc${minecraft_version}")
-    // compileOnly files("libs/railways-${snr_neoforge_version}.jar")
 
-    localRuntime("maven.modrinth:grieflogger:${grief_logger_version}-${minecraft_version}-neoforge")
+    //localRuntime("maven.modrinth:grieflogger:${grief_logger_version}-${minecraft_version}-neoforge")
     localRuntime("maven.modrinth:architectury-api:${architectury_api_version}+neoforge")
     localRuntime("maven.modrinth:supermartijn642s-config-lib:${sm642s_config_lib_version}-neoforge-mc${minecraft_major_version}")
-    // localRuntime files("libs/railways-${snr_neoforge_version}.jar")
+    localRuntime("maven.modrinth:copycats:${copycats_plus_version}+mc.${minecraft_version}-neoforge")
+    localRuntime files("libs/railways-${snr_neoforge_version}.jar")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
