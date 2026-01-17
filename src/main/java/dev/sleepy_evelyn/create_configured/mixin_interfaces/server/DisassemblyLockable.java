@@ -1,13 +1,8 @@
-package dev.sleepy_evelyn.create_configured.mixin_interfaces;
+package dev.sleepy_evelyn.create_configured.mixin_interfaces.server;
 
 import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-
-import java.util.UUID;
 
 public interface DisassemblyLockable {
     TrainDisassemblyLock cc$getLock();
     void cc$setLock(TrainDisassemblyLock lock);
-
-    UUID cc$getLastDisassembler();
-    void cc$setDisassembler(UUID disassembler);
 }

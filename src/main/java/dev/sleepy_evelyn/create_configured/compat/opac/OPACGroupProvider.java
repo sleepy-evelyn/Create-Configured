@@ -15,8 +15,6 @@ public class OPACGroupProvider implements GroupsProvider {
 
     @Override
     public Optional<MemberRank> getMemberRank(MinecraftServer server, UUID player, UUID targetPlayer) {
-        if (!server.isDedicatedServer()) return Optional.empty();
-
         var api = OpenPACServerAPI.get(server);
         var partyApi = api.getPartyManager().getPartyByMember(player);
 
@@ -29,7 +27,8 @@ public class OPACGroupProvider implements GroupsProvider {
                     case MODERATOR -> Optional.of(MemberRank.MODERATOR);
                     case ADMIN -> Optional.of(MemberRank.ADMIN);
                 };
-            }
+            } else
+                return Optional.of(MemberRank.NONE);
         }
         return Optional.empty();
     }

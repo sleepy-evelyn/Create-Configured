@@ -4,8 +4,7 @@ import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.trains.station.StationBlock;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
-import dev.sleepy_evelyn.create_configured.mixin_interfaces.DisassemblyLockable;
-import dev.sleepy_evelyn.create_configured.utils.PermissionChecks;
+import dev.sleepy_evelyn.create_configured.utils.TrainHelper;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.world.InteractionResult;
@@ -29,23 +28,14 @@ public class MixinWrenchItem {
             var state = level.getBlockState(clickedPos);
 
             if (level.getBlockEntity(clickedPos) instanceof StationBlockEntity stationBE) {
-                var station = stationBE.getStation();
-                boolean isAssemblyMode = state.getValue(StationBlock.ASSEMBLING);
+                if (state.getValue(StationBlock.ASSEMBLING)) return;
 
-                if (station != null & !isAssemblyMode) {
-                    var train = station.getPresentTrain();
+                TrainHelper.getOwnedTrain(stationBE).ifPresent(train -> {
+                    UUID deployerOwner = deployerFakePlayer.getUUID();
 
-                    if (train != null && train.owner != null) {
-                        UUID deployerOwner = deployerFakePlayer.getUUID();
-                        UUID trainOwner = train.owner;
-                        var disassemblyLock = (DisassemblyLockable) station;
-
-                        if (!PermissionChecks.canDisassembleTrain(level.getServer(), deployerOwner,
-                                trainOwner, disassemblyLock.cc$getLock())) {
-                            cir.setReturnValue(InteractionResult.FAIL);
-                        }
-                    }
-                }
+                    if (!TrainHelper.canDisassemble(level.getServer(), deployerOwner, train))
+                        cir.setReturnValue(InteractionResult.FAIL);
+                });
             }
         }
     }

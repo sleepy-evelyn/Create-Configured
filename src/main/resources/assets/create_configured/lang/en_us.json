@@ -17,5 +17,7 @@
 
   "create_configured.permission.bypass_train_disassembly.title": "Bypass Train Disassembly Lock",
   "create_configured.permission.bypass_train_disassembly.description": "Allows bypassing the train disassembly lock if it's enabled",
-  "create_configured.message.train_disassembly_denied": "Can't disassemble as you are not the trains owner"
+
+  "create_configured.message.train.disassembly_denied": "Can't disassemble train as you don't have permission from the owner",
+  "create_configured.message.train.lock_change_denied": "Can't change Disassembly Lock as you are not the Trains Owner"
 }

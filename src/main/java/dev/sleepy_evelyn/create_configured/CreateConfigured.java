@@ -3,6 +3,7 @@ package dev.sleepy_evelyn.create_configured;
 import com.mojang.logging.LogUtils;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
@@ -21,5 +22,9 @@ public class CreateConfigured {
 
     public static ResourceLocation rl(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    public static boolean isDedicatedServer(Level level) {
+        return level.getServer() != null && level.getServer().isDedicatedServer();
     }
 }

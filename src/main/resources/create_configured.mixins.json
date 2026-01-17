@@ -6,11 +6,10 @@
     "SpoutBlockEntityMixin"
   ],
   "server": [
-    "server.StationBlockEntityMixin",
-    "server.StationBlockMixin",
-    "server.TrackBlockMixin",
+    "server.MixinWrenchItem",
     "server.TrainMixin",
-    "server.MixinWrenchItem"
+    "server.StationBlockEntityMixin",
+    "server.TrackBlockMixin"
   ],
   "client": [
     "client.IconButtonMixin",

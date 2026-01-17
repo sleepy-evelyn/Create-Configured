@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin_interfaces;
+package dev.sleepy_evelyn.create_configured.mixin_interfaces.client;
 
 public interface GuiTaggable {
     void cc$setTag(String tag);

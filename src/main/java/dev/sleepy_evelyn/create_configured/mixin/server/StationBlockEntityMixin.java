@@ -3,26 +3,17 @@ package dev.sleepy_evelyn.create_configured.mixin.server;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.mixin_interfaces.DisassemblyLockable;
-import dev.sleepy_evelyn.create_configured.utils.PermissionChecks;
+import dev.sleepy_evelyn.create_configured.utils.TrainHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.UUID;
-
 @Mixin(value = StationBlockEntity.class, remap = false)
-public class StationBlockEntityMixin implements DisassemblyLockable {
-
-    @Unique private TrainDisassemblyLock cc$disassemblyLock;
-    @Unique @Nullable private UUID cc$lastDisassembler = null;
+public abstract class StationBlockEntityMixin {
 
     @Inject(
             method = "tryDisassembleTrain",
@@ -33,30 +24,10 @@ public class StationBlockEntityMixin implements DisassemblyLockable {
             cancellable = true
     )
     private void tryDisassembleTrain(ServerPlayer sender, CallbackInfoReturnable<Boolean> cir, @Local Train train) {
-        if (!PermissionChecks.canPlayerDisassembleTrain(sender, train.owner, cc$disassemblyLock)) {
-            sender.sendSystemMessage(Component.translatable("create_configured.message.train_disassembly_denied")
+        if (!TrainHelper.canPlayerDisassemble(sender, train)) {
+            sender.sendSystemMessage(Component.translatable("create_configured.message.train.disassembly_denied")
                     .withStyle(ChatFormatting.RED));
             cir.setReturnValue(false);
         }
-    }
-
-    @Override
-    public TrainDisassemblyLock cc$getLock() {
-        return cc$disassemblyLock;
-    }
-
-    @Override
-    public void cc$setLock(TrainDisassemblyLock lock) {
-        cc$disassemblyLock = lock;
-    }
-
-    @Override
-    public UUID cc$getLastDisassembler() {
-        return cc$lastDisassembler;
-    }
-
-    @Override
-    public void cc$setDisassembler(UUID disassembler) {
-        cc$lastDisassembler = disassembler;
     }
 }

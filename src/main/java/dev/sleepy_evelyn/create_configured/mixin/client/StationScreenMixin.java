@@ -4,18 +4,18 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.trains.station.*;
 import com.simibubi.create.foundation.gui.widget.IconButton;
-import dev.sleepy_evelyn.create_configured.client.CCGuiTextures;
-import dev.sleepy_evelyn.create_configured.CreateConfiguredClient;
 import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.mixin_interfaces.GuiTaggable;
+import dev.sleepy_evelyn.create_configured.config.CCConfigs;
+import dev.sleepy_evelyn.create_configured.gui.StationScreenSynced;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.DisassemblyLockSynced;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
-import dev.sleepy_evelyn.create_configured.utils.SideHelper;
+import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
+import dev.sleepy_evelyn.create_configured.utils.SoundHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,16 +28,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-import static dev.sleepy_evelyn.create_configured.CreateConfiguredClient.stationScreenSynced;
+import static dev.sleepy_evelyn.create_configured.CreateConfiguredClient.isInSinglePlayer;
 
 @Mixin(StationScreen.class)
-public abstract class StationScreenMixin extends AbstractStationScreen {
+public abstract class StationScreenMixin extends AbstractStationScreen implements DisassemblyLockSynced {
 
     @Unique private static final String CC$DISASSEMBLY_BUTTON_TAG = "disassemble_train";
 
     @Unique private int cc$lockX, cc$lockY;
-    @Unique private TrainDisassemblyLock cc$disassemblyLock = TrainDisassemblyLock.NOT_LOCKED;
-    @Unique private boolean cc$showLockButton = false;
+    @Unique private boolean cc$showLockButton = false, cc$syncedTrainInfo = false, cc$wasTrainPresent = false;
+    @Unique private StationScreenSynced cc$synced = new StationScreenSynced();
 
     @Shadow private IconButton disassembleTrainButton;
 
@@ -47,9 +47,22 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
 
     @Inject(method = "init()V", at = @At("TAIL"))
     private void StationScreen(CallbackInfo ci) {
-        cc$showLockButton = !SideHelper.inSingleplayer() && stationScreenSynced.disassemblyLockEnabled();
-        if (cc$showLockButton)
-            ((GuiTaggable) disassembleTrainButton).cc$setTag(CC$DISASSEMBLY_BUTTON_TAG);
+        ((GuiTaggable) disassembleTrainButton).cc$setTag(CC$DISASSEMBLY_BUTTON_TAG);
+    }
+
+    @Inject(method = "tickTrainDisplay", at = @At("HEAD"))
+    private void tickTrainDisplay(CallbackInfo ci) {
+        boolean trainPresent = trainPresent();
+
+        if (isInSinglePlayer() || !CCConfigs.server().lockTrainDisassembly.get() || !trainPresent)
+            cc$showLockButton = false;
+        else {
+            if (!cc$wasTrainPresent)
+                PacketDistributor.sendToServer(new NotifyTrainAtStation(blockEntity.getBlockPos()));
+            else if (cc$syncedTrainInfo)
+                cc$showLockButton = cc$isTrainOwner();
+        }
+        cc$wasTrainPresent = trainPresent;
     }
 
     @Inject(
@@ -61,20 +74,17 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
     )
     private void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (!cc$showLockButton) return;
-        cc$lockX = guiLeft + 172;
-        cc$lockY = guiTop + 42;
+        var syncedLock = cc$synced.getLock();
 
-        (switch (cc$disassemblyLock) {
-            case NOT_LOCKED -> CCGuiTextures.TRAIN_DISASSEMBLY_LOCK_OPEN;
-            case LOCKED -> CCGuiTextures.TRAIN_DISASSEMBLY_LOCK_CLOSED;
-            case PARTY_MEMBERS_ONLY -> CCGuiTextures.TRAIN_DISASSEMBLY_LOCK_WARN;
-        }).render(graphics, cc$lockX, cc$lockY);
+        cc$lockX = guiLeft + 173;
+        cc$lockY = guiTop + 42;
+        syncedLock.getTexture().render(graphics, cc$lockX, cc$lockY);
 
         if (mouseX > cc$lockX && mouseY > cc$lockY && mouseX <= cc$lockX + 15 && mouseY <= cc$lockY + 15) {
             graphics.renderComponentTooltip(font,
                     List.of(
-                            cc$getLockTooltipComponent("title", ChatFormatting.WHITE),
-                            cc$getLockTooltipComponent("description", ChatFormatting.GRAY),
+                            syncedLock.getTooltipComponent("title", ChatFormatting.WHITE),
+                            syncedLock.getTooltipComponent("description", ChatFormatting.GRAY),
                             Component.translatable("create_configured.gui.tooltip.switch_state")
                                     .withStyle(ChatFormatting.DARK_GRAY)
                                     .withStyle(ChatFormatting.ITALIC)
@@ -87,17 +97,10 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
     private void mouseClicked(double pMouseX, double pMouseY, int pButton, CallbackInfoReturnable<Boolean> cir) {
         if (!cc$showLockButton) return;
         if (pMouseX > cc$lockX && pMouseY > cc$lockY && pMouseX <= cc$lockX + 15 && pMouseY <= cc$lockY + 15) {
-            boolean hasGroupProvider = !CreateConfiguredClient.groupsProviderId.contains("none");
-
-            this.cc$disassemblyLock = switch (cc$disassemblyLock) {
-                case NOT_LOCKED -> hasGroupProvider ? TrainDisassemblyLock.PARTY_MEMBERS_ONLY : TrainDisassemblyLock.LOCKED;
-                case PARTY_MEMBERS_ONLY -> TrainDisassemblyLock.LOCKED;
-                case LOCKED -> TrainDisassemblyLock.NOT_LOCKED;
-            };
-            Minecraft.getInstance().getSoundManager()
-                    .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1, 1));
-            PacketDistributor.sendToServer(new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(),
-                    cc$disassemblyLock));
+            cc$synced.cycleLock();
+            SoundHelper.playButtonPress();
+            PacketDistributor.sendToServer(
+                    new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), cc$synced.getLock()));
             cir.setReturnValue(true);
         }
     }
@@ -111,7 +114,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
             )
     )
     private void disassembleButtonActiveState(IconButton instance, boolean newValue, Operation<Void> original) {
-        original.call(instance, (!cc$isDisassembleButton(instance) || cc$canDisassemble()) && newValue);
+        original.call(instance, (!cc$isDisassembleButton(instance) || cc$synced.canPlayerDisassemble()) && newValue);
     }
 
     @WrapOperation(
@@ -123,28 +126,23 @@ public abstract class StationScreenMixin extends AbstractStationScreen {
     )
     private void disassembleButtonSetTooltip(IconButton instance, Component newTooltip, Operation<Void> original) {
         if (cc$isDisassembleButton(instance))
-            original.call(instance, cc$canDisassemble() ? newTooltip :
-                    Component.translatable("create_configured.message.train_disassembly_denied"));
+            original.call(instance, cc$synced.canPlayerDisassemble() ? newTooltip :
+                    Component.translatable("create_configured.message.train.disassembly_denied"));
         else
             original.call(instance, newTooltip);
     }
 
     @Unique
-    private Component cc$getLockTooltipComponent(String suffix, ChatFormatting... style) {
-        return Component.translatable("create_configured.gui.station.disassembly_lock." +
-                switch(cc$disassemblyLock) {
-                    case LOCKED -> "locked." + suffix;
-                    case NOT_LOCKED -> "not_locked." + suffix;
-                    case PARTY_MEMBERS_ONLY -> "party_members." + suffix;
-                }
-        ).withStyle(style);
+    public void cc$onSyncDisassemblyLock(boolean canPlayerDisassemble, TrainDisassemblyLock lock) {
+        cc$showLockButton = !isInSinglePlayer() && CCConfigs.server().lockTrainDisassembly.get() && cc$isTrainOwner();
+        cc$synced = new StationScreenSynced(canPlayerDisassemble, lock);
+        cc$syncedTrainInfo = true;
     }
 
     @Unique
     @SuppressWarnings("DataFlowIssue")
-    private boolean cc$canDisassemble() {
-        if (stationScreenSynced.canBypassDisassembly()) return true;
-        else if (displayedTrain.get() != null) {
+    private boolean cc$isTrainOwner() {
+        if (displayedTrain.get() != null) {
             var trainOwnerUuid = displayedTrain.get().owner;
             var playerUuid = Minecraft.getInstance().player.getUUID();
 

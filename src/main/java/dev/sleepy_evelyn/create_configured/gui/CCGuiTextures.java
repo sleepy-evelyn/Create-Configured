@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.client;
+package dev.sleepy_evelyn.create_configured.gui;
 
 import net.createmod.catnip.gui.TextureSheetSegment;
 import net.createmod.catnip.gui.UIRenderHelper;

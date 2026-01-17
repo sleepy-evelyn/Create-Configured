@@ -1,7 +1,7 @@
 package dev.sleepy_evelyn.create_configured.mixin.client;
 
 import com.simibubi.create.foundation.gui.widget.IconButton;
-import dev.sleepy_evelyn.create_configured.mixin_interfaces.GuiTaggable;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

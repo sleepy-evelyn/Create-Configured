@@ -1,25 +1,36 @@
 package dev.sleepy_evelyn.create_configured;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
+import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @Mod(value = CreateConfigured.MOD_ID, dist = Dist.CLIENT)
+@EventBusSubscriber(modid = CreateConfigured.MOD_ID, value = Dist.CLIENT)
 public class CreateConfiguredClient {
 
     public static String groupsProviderId = "none";
-    public static StationScreenSynced stationScreenSynced = new StationScreenSynced();
+
+    private static boolean inSinglePlayer = true;
 
     public CreateConfiguredClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, (_container, screen)
                 -> new BaseConfigScreen(screen, _container.getModId()));
     }
 
-    public record StationScreenSynced(boolean canBypassDisassembly, boolean disassemblyLockEnabled) {
-        public StationScreenSynced() {
-            this(true, true);
-        }
+    @SubscribeEvent
+    public static void onPlayerJoin(ClientPlayerNetworkEvent.LoggingIn e) {
+        inSinglePlayer = Minecraft.getInstance().getSingleplayerServer() != null;
+    }
+
+    public static boolean isInSinglePlayer() {
+        return inSinglePlayer;
     }
 }
