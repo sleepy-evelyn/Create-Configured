@@ -35,7 +35,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
 
     @Unique private static final String CC$DISASSEMBLY_BUTTON_TAG = "disassemble_train";
 
-    @Unique private int cc$lockX, cc$lockY;
+    @Unique private int cc$sidebarTopX, cc$sidebarTopY;
     @Unique private boolean cc$showLockButton = false, cc$syncedTrainInfo = false, cc$wasTrainPresent = false;
     @Unique private StationScreenSynced cc$synced = new StationScreenSynced();
 
@@ -77,13 +77,14 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
         var lock = cc$synced.getLock();
         var trainSpeed = cc$synced.getTrainSpeed();
 
-        cc$lockX = guiLeft + 173;
-        cc$lockY = guiTop + 42;
-        lock.getTexture().render(graphics, cc$lockX, cc$lockY);
-        trainSpeed.getTexture().render(graphics, cc$lockX, cc$lockY + 19);
+        cc$sidebarTopX = guiLeft + 173;
+        cc$sidebarTopY = guiTop + 42;
 
-        if (mouseX > cc$lockX && mouseX <= cc$lockX + 15) {
-            if (mouseY > cc$lockY && mouseY <= cc$lockY + 15) {
+        lock.getTexture().render(graphics, cc$sidebarTopX, cc$sidebarTopY);
+        trainSpeed.getTexture().render(graphics, cc$sidebarTopX, cc$sidebarTopY + 18);
+
+        if (mouseX > cc$sidebarTopX && mouseX <= cc$sidebarTopX + 15) {
+            if (mouseY > cc$sidebarTopY && mouseY <= cc$sidebarTopY + 15) {
                 graphics.renderComponentTooltip(font,
                         List.of(
                                 lock.getTooltipComponent("title", ChatFormatting.WHITE),
@@ -93,7 +94,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
                                         .withStyle(ChatFormatting.ITALIC)
                         ), mouseX, mouseY
                 );
-            } else if (mouseY > cc$lockY + 19 && mouseY <= cc$lockY + 34) {
+            } else if (mouseY > cc$sidebarTopY + 18 && mouseY <= cc$sidebarTopY + 33) {
                 // TODO - Speed button tooltip
             }
         }
@@ -102,15 +103,15 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
     private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (!cc$showLockButton) return;
-        if (mouseX > cc$lockX && mouseX <= cc$lockX + 15) {
+        if (mouseX > cc$sidebarTopX && mouseX <= cc$sidebarTopX + 15) {
             boolean buttonPressed = false;
 
-            if (mouseY > cc$lockY && mouseY <= cc$lockY + 15) {
+            if (mouseY > cc$sidebarTopY && mouseY <= cc$sidebarTopY + 15) {
                 buttonPressed = true;
                 cc$synced.cycleLock();
                 PacketDistributor.sendToServer(
                         new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), cc$synced.getLock()));
-            } else if (mouseY > cc$lockY + 19 && mouseY <= cc$lockY + 34) {
+            } else if (mouseY > cc$sidebarTopY + 18 && mouseY <= cc$sidebarTopY + 33) {
                 buttonPressed = true;
                 cc$synced.cycleTrainSpeed();
                 // TODO - Speed button packet

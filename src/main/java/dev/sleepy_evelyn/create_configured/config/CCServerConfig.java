@@ -1,5 +1,6 @@
 package dev.sleepy_evelyn.create_configured.config;
 
+import dev.sleepy_evelyn.create_configured.config.nested.TrainSpeedsConfig;
 import net.createmod.catnip.config.ConfigBase;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +14,9 @@ public class CCServerConfig extends ConfigBase {
 
     public final ConfigBool lockTrainDisassembly = b(true, "lockTrainDisassembly",
             "Allows players to lock train disassembly for individual trains. (Ignored in Singleplayer)");
+
+    public final TrainSpeedsConfig trainSpeedOptions = nested(0, TrainSpeedsConfig::new,
+            "Additional Train speed options");
 
     /*public final ConfigBool requestLoopedSchedules = b(true, "requestLoopedSchedules",
             "Require manual approval for looping schedules");*/

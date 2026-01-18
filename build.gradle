@@ -126,9 +126,11 @@ dependencies {
     compileOnly("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
 
     // For testing
-    localRuntime("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_tweaked_version}")
-    localRuntime("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
-    localRuntime files("libs/railways-dev.jar")
+    if (load_optional_mods.toBoolean()) {
+        localRuntime("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_tweaked_version}")
+        localRuntime("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
+        localRuntime files("libs/railways-dev.jar")
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
