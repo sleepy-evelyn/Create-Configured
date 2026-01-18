@@ -1,7 +1,13 @@
 package dev.sleepy_evelyn.create_configured;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.config.CServer;
+import dev.sleepy_evelyn.create_configured.config.CCConfigs;
+import dev.sleepy_evelyn.create_configured.config.nested.TrainSpeedsConfig;
 import dev.sleepy_evelyn.create_configured.gui.CCGuiTextures;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
@@ -26,12 +32,29 @@ public enum TrainSpeed {
     private final int id;
     private final CCGuiTextures texture;
 
-    public CCGuiTextures getTexture() { return texture; }
-
     TrainSpeed(int id, CCGuiTextures texture) {
         this.id = id;
         this.texture = texture;
     }
 
     public int getId() { return id; }
+
+    public CCGuiTextures getTexture() { return texture; }
+
+    public int getBlocksPerSecondSpeed() {
+        float defaultTopSpeed = AllConfigs.server().trains.poweredTrainTopSpeed.getF();
+        float multiplier = 1;
+        TrainSpeedsConfig trainSpeedOptions = CCConfigs.server().trainSpeedOptions;
+
+        if (this == FAST)
+            multiplier = trainSpeedOptions.fastTopSpeedMultiplier.getF();
+        else if (this == SLOW)
+            multiplier = trainSpeedOptions.slowTopSpeedMultiplier.getF();
+
+        return Math.round(defaultTopSpeed * multiplier);
+    }
+
+    public Component getTooltipNameComponent() {
+        return Component.translatable(String.format("create_configured.gui.station.train_speed.%s", name().toLowerCase()));
+    }
 }

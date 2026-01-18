@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 
-public class SoundHelper {
+public class SoundUtils {
 
     public static void playButtonPress() {
         Minecraft.getInstance().getSoundManager()

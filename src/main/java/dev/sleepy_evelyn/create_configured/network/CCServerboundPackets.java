@@ -6,7 +6,7 @@ import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.DisassemblyLo
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
-import dev.sleepy_evelyn.create_configured.utils.TrainHelper;
+import dev.sleepy_evelyn.create_configured.utils.TrainPermissionChecks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,12 +39,12 @@ public final class CCServerboundPackets {
         if (!isDedicatedServer(level)) return;
 
         if (level.getBlockEntity(payload.stationPos()) instanceof StationBlockEntity sbe)
-            TrainHelper.getOwnedTrain(sbe).ifPresent(train -> {
+            TrainPermissionChecks.getOwnedTrain(sbe).ifPresent(train -> {
                 var lock = ((DisassemblyLockable) train).cc$getLock();
                 var serverPlayer = (ServerPlayer) ctx.player();
 
                 PacketDistributor.sendToPlayer(serverPlayer,
-                        new StationScreenSyncPayload(TrainHelper.canDisassemble(serverPlayer, train), lock));
+                        new StationScreenSyncPayload(TrainPermissionChecks.canDisassemble(serverPlayer, train), lock));
             });
     }
 
@@ -57,7 +57,7 @@ public final class CCServerboundPackets {
         var player = ctx.player();
 
         if (level.getBlockEntity(stationPos) instanceof StationBlockEntity sbe) {
-            var trainOptional = TrainHelper.getOwnedTrain(sbe);
+            var trainOptional = TrainPermissionChecks.getOwnedTrain(sbe);
 
             if (trainOptional.isPresent()) {
                 var train = trainOptional.get();

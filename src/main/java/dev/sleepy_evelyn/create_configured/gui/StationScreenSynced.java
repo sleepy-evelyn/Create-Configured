@@ -6,7 +6,7 @@ import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
 import dev.sleepy_evelyn.create_configured.TrainSpeed;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.DisassemblyLockSynced;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
-import dev.sleepy_evelyn.create_configured.utils.ScreenHelper;
+import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
 
 public class StationScreenSynced {
 
@@ -49,7 +49,7 @@ public class StationScreenSynced {
     public TrainSpeed getTrainSpeed() { return trainSpeed; }
 
     public static void syncScreen(StationScreenSyncPayload payload) {
-        ScreenHelper.getIfInstance(StationScreen.class).ifPresent(stationScreen ->
+        ScreenUtils.getIfInstance(StationScreen.class).ifPresent(stationScreen ->
                 ((DisassemblyLockSynced) stationScreen).cc$onSyncDisassemblyLock(
                         payload.canPlayerDisassemble(),
                         payload.lock()));

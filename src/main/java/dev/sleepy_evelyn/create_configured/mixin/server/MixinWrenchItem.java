@@ -4,7 +4,7 @@ import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.trains.station.StationBlock;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
-import dev.sleepy_evelyn.create_configured.utils.TrainHelper;
+import dev.sleepy_evelyn.create_configured.utils.TrainPermissionChecks;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.world.InteractionResult;
@@ -30,10 +30,10 @@ public class MixinWrenchItem {
             if (level.getBlockEntity(clickedPos) instanceof StationBlockEntity stationBE) {
                 if (state.getValue(StationBlock.ASSEMBLING)) return;
 
-                TrainHelper.getOwnedTrain(stationBE).ifPresent(train -> {
+                TrainPermissionChecks.getOwnedTrain(stationBE).ifPresent(train -> {
                     UUID deployerOwner = deployerFakePlayer.getUUID();
 
-                    if (!TrainHelper.canDisassemble(level.getServer(), deployerOwner, train))
+                    if (!TrainPermissionChecks.canDisassemble(level.getServer(), deployerOwner, train))
                         cir.setReturnValue(InteractionResult.FAIL);
                 });
             }

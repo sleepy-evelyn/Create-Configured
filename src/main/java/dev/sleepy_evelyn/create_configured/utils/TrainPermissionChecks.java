@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfiguredServer.groupsProvider;
 
-public class TrainHelper {
+public class TrainPermissionChecks {
 
     public static Optional<Train> getOwnedTrain(StationBlockEntity sbe) {
         return Optional.ofNullable(sbe)

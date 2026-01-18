@@ -3,9 +3,7 @@ package dev.sleepy_evelyn.create_configured.mixin.server;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
-import dev.sleepy_evelyn.create_configured.CreateConfigured;
-import dev.sleepy_evelyn.create_configured.CreateConfiguredServer;
-import dev.sleepy_evelyn.create_configured.utils.TrainHelper;
+import dev.sleepy_evelyn.create_configured.utils.TrainPermissionChecks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +25,7 @@ public abstract class StationBlockEntityMixin {
             cancellable = true
     )
     private void tryDisassembleTrain(@Nullable ServerPlayer sender, CallbackInfoReturnable<Boolean> cir, @Local Train train) {
-        if (!TrainHelper.canDisassemble(sender, train)) {
+        if (!TrainPermissionChecks.canDisassemble(sender, train)) {
             if (sender != null)
                 sender.sendSystemMessage(Component.translatable("create_configured.message.train.disassembly_denied")
                         .withStyle(ChatFormatting.RED));

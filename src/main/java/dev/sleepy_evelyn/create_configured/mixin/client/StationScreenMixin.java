@@ -11,7 +11,8 @@ import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.DisassemblyLockSynced;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
-import dev.sleepy_evelyn.create_configured.utils.SoundHelper;
+import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
+import dev.sleepy_evelyn.create_configured.utils.SoundUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -89,13 +90,17 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
                         List.of(
                                 lock.getTooltipComponent("title", ChatFormatting.WHITE),
                                 lock.getTooltipComponent("description", ChatFormatting.GRAY),
-                                Component.translatable("create_configured.gui.tooltip.switch_state")
-                                        .withStyle(ChatFormatting.DARK_GRAY)
-                                        .withStyle(ChatFormatting.ITALIC)
+                                ScreenUtils.Tooltip.switchStateComponent()
                         ), mouseX, mouseY
                 );
             } else if (mouseY > cc$sidebarTopY + 18 && mouseY <= cc$sidebarTopY + 33) {
-                // TODO - Speed button tooltip
+                graphics.renderComponentTooltip(font,
+                        List.of(
+                                trainSpeed.getTooltipNameComponent(),
+                                Component.translatable("create_configured.gui.station.train_speed.blocks_per_second",
+                                        trainSpeed.getBlocksPerSecondSpeed()).withStyle(ChatFormatting.GRAY),
+                                ScreenUtils.Tooltip.switchStateComponent()
+                        ), mouseX, mouseY);
             }
         }
     }
@@ -117,7 +122,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
                 // TODO - Speed button packet
             }
             if (buttonPressed) {
-                SoundHelper.playButtonPress();
+                SoundUtils.playButtonPress();
                 cir.setReturnValue(true);
             }
         }
