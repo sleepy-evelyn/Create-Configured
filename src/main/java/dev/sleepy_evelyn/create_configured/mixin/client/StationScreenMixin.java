@@ -97,8 +97,8 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
                 graphics.renderComponentTooltip(font,
                         List.of(
                                 trainSpeed.getTooltipNameComponent(),
-                                Component.translatable("create_configured.gui.station.train_speed.blocks_per_second",
-                                        trainSpeed.getBlocksPerSecondSpeed()).withStyle(ChatFormatting.GRAY),
+                                trainSpeed.getBpsTooltipComponent(1),
+                                trainSpeed.getBpsTooltipComponent(2),
                                 ScreenUtils.Tooltip.switchStateComponent()
                         ), mouseX, mouseY);
             }

@@ -12,7 +12,8 @@
   "create_configured.gui.station.train_speed.fast": "Fast Train",
   "create_configured.gui.station.train_speed.default": "Default Train",
   "create_configured.gui.station.train_speed.slow": "Slow Train",
-  "create_configured.gui.station.train_speed.blocks_per_second": "This Train will move at a max speed of\n%s blocks per second",
+  "create_configured.gui.station.train_speed.blocks_per_second_1": "This train will move at a max speed of",
+  "create_configured.gui.station.train_speed.blocks_per_second_2": "%s blocks per second",
   "create_configured.gui.tooltip.switch_state": "Click to switch state",
 
   "create_configured.permission.bypass_train_disassembly.title": "Bypass Train Disassembly Lock",

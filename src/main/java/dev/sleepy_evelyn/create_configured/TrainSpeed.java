@@ -57,4 +57,13 @@ public enum TrainSpeed {
     public Component getTooltipNameComponent() {
         return Component.translatable(String.format("create_configured.gui.station.train_speed.%s", name().toLowerCase()));
     }
+
+    public Component getBpsTooltipComponent(int line) {
+        final String keyPrefix = "create_configured.gui.station.train_speed.blocks_per_second_";
+
+        return (line == 1
+                ? Component.translatable(keyPrefix + line)
+                : Component.translatable(keyPrefix + line, getBlocksPerSecondSpeed())
+        ).withStyle(ChatFormatting.GRAY);
+    }
 }

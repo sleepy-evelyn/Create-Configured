@@ -9,9 +9,9 @@ public class TrainSpeedsConfig extends ConfigBase {
             "Allow the max speed of Trains to be set to slow, default or fast in a station.");
 
     public final ConfigBool canPlayerChangeSpeed = b(false, "canPlayerChangeSpeed",
-            "Should regular Players should be allowed to change a Trains speed. (Ignored in Singleplayer)");
+            "Should regular Players be allowed to change a Trains speed. (Ignored in Singleplayer)");
 
-    public final ConfigFloat slowTopSpeedMultiplier = f(.75f, 0f, "slowTopSpeedMultiplier",
+    public final ConfigFloat slowTopSpeedMultiplier = f(.75f, 0f, 1f, "slowTopSpeedMultiplier",
             "Scales a Powered Trains max speed for slow Trains.");
 
     public final ConfigFloat fastTopSpeedMultiplier = f(1.25f, 1f,  "fastTopSpeedMultiplier",
