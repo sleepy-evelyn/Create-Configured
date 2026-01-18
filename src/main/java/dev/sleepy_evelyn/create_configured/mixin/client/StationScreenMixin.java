@@ -30,7 +30,7 @@ import java.util.List;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfiguredClient.isInSinglePlayer;
 
-@Mixin(StationScreen.class)
+@Mixin(value = StationScreen.class, remap = false)
 public abstract class StationScreenMixin extends AbstractStationScreen implements DisassemblyLockSynced {
 
     @Unique private static final String CC$DISASSEMBLY_BUTTON_TAG = "disassemble_train";
@@ -74,34 +74,51 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     )
     private void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (!cc$showLockButton) return;
-        var syncedLock = cc$synced.getLock();
+        var lock = cc$synced.getLock();
+        var trainSpeed = cc$synced.getTrainSpeed();
 
         cc$lockX = guiLeft + 173;
         cc$lockY = guiTop + 42;
-        syncedLock.getTexture().render(graphics, cc$lockX, cc$lockY);
+        lock.getTexture().render(graphics, cc$lockX, cc$lockY);
+        trainSpeed.getTexture().render(graphics, cc$lockX, cc$lockY + 19);
 
-        if (mouseX > cc$lockX && mouseY > cc$lockY && mouseX <= cc$lockX + 15 && mouseY <= cc$lockY + 15) {
-            graphics.renderComponentTooltip(font,
-                    List.of(
-                            syncedLock.getTooltipComponent("title", ChatFormatting.WHITE),
-                            syncedLock.getTooltipComponent("description", ChatFormatting.GRAY),
-                            Component.translatable("create_configured.gui.tooltip.switch_state")
-                                    .withStyle(ChatFormatting.DARK_GRAY)
-                                    .withStyle(ChatFormatting.ITALIC)
-                    ), mouseX, mouseY
-            );
+        if (mouseX > cc$lockX && mouseX <= cc$lockX + 15) {
+            if (mouseY > cc$lockY && mouseY <= cc$lockY + 15) {
+                graphics.renderComponentTooltip(font,
+                        List.of(
+                                lock.getTooltipComponent("title", ChatFormatting.WHITE),
+                                lock.getTooltipComponent("description", ChatFormatting.GRAY),
+                                Component.translatable("create_configured.gui.tooltip.switch_state")
+                                        .withStyle(ChatFormatting.DARK_GRAY)
+                                        .withStyle(ChatFormatting.ITALIC)
+                        ), mouseX, mouseY
+                );
+            } else if (mouseY > cc$lockY + 19 && mouseY <= cc$lockY + 34) {
+                // TODO - Speed button tooltip
+            }
         }
     }
 
     @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
-    private void mouseClicked(double pMouseX, double pMouseY, int pButton, CallbackInfoReturnable<Boolean> cir) {
+    private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (!cc$showLockButton) return;
-        if (pMouseX > cc$lockX && pMouseY > cc$lockY && pMouseX <= cc$lockX + 15 && pMouseY <= cc$lockY + 15) {
-            cc$synced.cycleLock();
-            SoundHelper.playButtonPress();
-            PacketDistributor.sendToServer(
-                    new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), cc$synced.getLock()));
-            cir.setReturnValue(true);
+        if (mouseX > cc$lockX && mouseX <= cc$lockX + 15) {
+            boolean buttonPressed = false;
+
+            if (mouseY > cc$lockY && mouseY <= cc$lockY + 15) {
+                buttonPressed = true;
+                cc$synced.cycleLock();
+                PacketDistributor.sendToServer(
+                        new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), cc$synced.getLock()));
+            } else if (mouseY > cc$lockY + 19 && mouseY <= cc$lockY + 34) {
+                buttonPressed = true;
+                cc$synced.cycleTrainSpeed();
+                // TODO - Speed button packet
+            }
+            if (buttonPressed) {
+                SoundHelper.playButtonPress();
+                cir.setReturnValue(true);
+            }
         }
     }
 

@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.HOLD;
 import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.PASS;
 
-@Mixin(SpoutBlockEntity.class)
+@Mixin(value = SpoutBlockEntity.class, remap = false)
 public abstract class SpoutBlockEntityMixin extends SmartBlockEntity {
 
     @Shadow SmartFluidTankBehaviour tank;

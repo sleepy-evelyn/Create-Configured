@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfigured.MOD_ID;
 
-@Mixin(ScheduleScreen.class)
+@Mixin(value = ScheduleScreen.class, remap = false)
 public abstract class ScheduleScreenMixin extends AbstractSimiContainerScreen<ScheduleMenu> {
 
     public ScheduleScreenMixin(ScheduleMenu container, Inventory inv, Component title) {

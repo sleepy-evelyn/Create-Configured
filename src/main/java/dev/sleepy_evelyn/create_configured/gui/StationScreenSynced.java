@@ -3,6 +3,7 @@ package dev.sleepy_evelyn.create_configured.gui;
 import com.simibubi.create.content.trains.station.StationScreen;
 import dev.sleepy_evelyn.create_configured.CreateConfiguredClient;
 import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.TrainSpeed;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.DisassemblyLockSynced;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
 import dev.sleepy_evelyn.create_configured.utils.ScreenHelper;
@@ -11,15 +12,18 @@ public class StationScreenSynced {
 
     private final boolean canPlayerDisassemble;
     private TrainDisassemblyLock lock;
+    private TrainSpeed trainSpeed;
 
     public StationScreenSynced() {
         canPlayerDisassemble = true;
         lock = TrainDisassemblyLock.NOT_LOCKED;
+        trainSpeed = TrainSpeed.DEFAULT;
     }
 
     public StationScreenSynced(boolean canPlayerDisassemble, TrainDisassemblyLock lock) {
         this.canPlayerDisassemble = canPlayerDisassemble;
         this.lock = lock;
+        this.trainSpeed = TrainSpeed.DEFAULT; // Placeholder
     }
 
     public void cycleLock() {
@@ -32,8 +36,17 @@ public class StationScreenSynced {
         };
     }
 
+    public void cycleTrainSpeed() {
+        trainSpeed = switch(trainSpeed) {
+            case FAST -> TrainSpeed.SLOW;
+            case DEFAULT -> TrainSpeed.FAST;
+            case SLOW -> TrainSpeed.DEFAULT;
+        };
+    }
+
     public boolean canPlayerDisassemble() { return canPlayerDisassemble; }
     public TrainDisassemblyLock getLock() { return lock; }
+    public TrainSpeed getTrainSpeed() { return trainSpeed; }
 
     public static void syncScreen(StationScreenSyncPayload payload) {
         ScreenHelper.getIfInstance(StationScreen.class).ifPresent(stationScreen ->

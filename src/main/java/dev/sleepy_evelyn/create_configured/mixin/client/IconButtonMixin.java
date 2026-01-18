@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(IconButton.class)
+@Mixin(value = IconButton.class, remap = false)
 public class IconButtonMixin implements GuiTaggable {
 
     @Unique private @Nullable String cc$tag;

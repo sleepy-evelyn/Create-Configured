@@ -7,17 +7,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.ClientHooks;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @Mod(value = CreateConfigured.MOD_ID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = CreateConfigured.MOD_ID, value = Dist.CLIENT)
 public class CreateConfiguredClient {
 
     public static String groupsProviderId = "none";
-
     private static boolean inSinglePlayer = true;
 
     public CreateConfiguredClient(ModContainer container) {

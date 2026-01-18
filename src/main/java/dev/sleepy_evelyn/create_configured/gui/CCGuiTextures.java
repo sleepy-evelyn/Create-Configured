@@ -32,7 +32,11 @@ public enum CCGuiTextures implements ScreenElement, TextureSheetSegment {
 
     TRAIN_DISASSEMBLY_LOCK_CLOSED("train_disassembly_lock", 0, 0, 16, 16, 32),
     TRAIN_DISASSEMBLY_LOCK_WARN("train_disassembly_lock", 16, 0, 16, 16, 32),
-    TRAIN_DISASSEMBLY_LOCK_OPEN("train_disassembly_lock", 0, 16, 16, 16, 32);
+    TRAIN_DISASSEMBLY_LOCK_OPEN("train_disassembly_lock", 0, 16, 16, 16, 32),
+
+    TRAIN_SPEED_MODIFIER_SLOW("train_speed_modifier", 0, 0, 16, 16, 32),
+    TRAIN_SPEED_MODIFIER_DEFAULT("train_speed_modifier", 16, 0, 16, 16, 32),
+    TRAIN_SPEED_MODIFIER_FAST("train_speed_modifier", 0, 16, 16, 16, 32);
 
     public final ResourceLocation location;
     private final int width, height, startX, startY, textureWidth, textureHeight;

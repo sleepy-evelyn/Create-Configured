@@ -2,7 +2,6 @@ package dev.sleepy_evelyn.create_configured.network;
 
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import dev.sleepy_evelyn.create_configured.CreateConfigured;
-import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.DisassemblyLockable;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
@@ -45,7 +44,7 @@ public final class CCServerboundPackets {
                 var serverPlayer = (ServerPlayer) ctx.player();
 
                 PacketDistributor.sendToPlayer(serverPlayer,
-                        new StationScreenSyncPayload(TrainHelper.canPlayerDisassemble(serverPlayer, train), lock));
+                        new StationScreenSyncPayload(TrainHelper.canDisassemble(serverPlayer, train), lock));
             });
     }
 
