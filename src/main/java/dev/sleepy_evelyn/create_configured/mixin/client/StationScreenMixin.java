@@ -5,15 +5,15 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.trains.station.*;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
-import dev.sleepy_evelyn.create_configured.gui.StationScreenSynced;
+import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
-import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.DisassemblyLockSynced;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.TrainTweaksSynced;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
-import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
+import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
 import dev.sleepy_evelyn.create_configured.utils.SoundUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -27,19 +27,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
+import java.util.*;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfiguredClient.isInSinglePlayer;
 
 @Mixin(value = StationScreen.class, remap = false)
-public abstract class StationScreenMixin extends AbstractStationScreen implements DisassemblyLockSynced {
+public abstract class StationScreenMixin extends AbstractStationScreen implements TrainTweaksSynced {
 
     @Unique private static final String CC$DISASSEMBLY_BUTTON_TAG = "disassemble_train";
 
     @Unique private int cc$sidebarTopX, cc$sidebarTopY;
-    @Unique private boolean cc$showLockButton = false, cc$syncedTrainInfo = false, cc$wasTrainPresent = false;
-    @Unique private StationScreenSynced cc$synced = new StationScreenSynced();
+    @Unique private boolean cc$wasTrainPresent = false, cc$showLock = false, cc$hasSynced = false;
 
+    @Unique private TrainTweakPermissions cc$permissions = new TrainTweakPermissions();
+    @Unique private final List<TriStateButton> cc$triStateButtons = new LinkedList<>();
     @Shadow private IconButton disassembleTrainButton;
 
     public StationScreenMixin(StationBlockEntity be, GlobalStation station) {
@@ -56,12 +57,13 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
         boolean trainPresent = trainPresent();
 
         if (isInSinglePlayer() || !CCConfigs.server().lockTrainDisassembly.get() || !trainPresent)
-            cc$showLockButton = false;
+            cc$showLock = false;
         else {
-            if (!cc$wasTrainPresent)
+            if (!cc$wasTrainPresent) // If a new Train has arrived, request new data.
                 PacketDistributor.sendToServer(new NotifyTrainAtStation(blockEntity.getBlockPos()));
-            else if (cc$syncedTrainInfo)
-                cc$showLockButton = cc$isTrainOwner();
+            else if (cc$hasSynced) {
+                cc$showLock = cc$isTrainOwner();
+            }
         }
         cc$wasTrainPresent = trainPresent;
     }
@@ -74,52 +76,48 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
             )
     )
     private void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
-        if (!cc$showLockButton) return;
-        var lock = cc$synced.getLock();
-        var trainSpeed = cc$synced.getTrainSpeed();
-
+        if (cc$triStateButtons.isEmpty()) return;
         cc$sidebarTopX = guiLeft + 173;
-        cc$sidebarTopY = guiTop + 42;
+        cc$sidebarTopY = guiTop + 40;
 
-        lock.getTexture().render(graphics, cc$sidebarTopX, cc$sidebarTopY);
-        trainSpeed.getTexture().render(graphics, cc$sidebarTopX, cc$sidebarTopY + 18);
-
+        int row = 0;
+        for (var button : cc$triStateButtons) {
+            button.getTexture().render(graphics, cc$sidebarTopX, cc$sidebarTopY + (18 * row));
+            row++;
+        }
         if (mouseX > cc$sidebarTopX && mouseX <= cc$sidebarTopX + 15) {
-            if (mouseY > cc$sidebarTopY && mouseY <= cc$sidebarTopY + 15) {
-                graphics.renderComponentTooltip(font,
-                        List.of(
-                                lock.getTooltipComponent("title", ChatFormatting.WHITE),
-                                lock.getTooltipComponent("description", ChatFormatting.GRAY),
-                                ScreenUtils.Tooltip.switchStateComponent()
-                        ), mouseX, mouseY
-                );
-            } else if (mouseY > cc$sidebarTopY + 18 && mouseY <= cc$sidebarTopY + 33) {
-                graphics.renderComponentTooltip(font,
-                        List.of(
-                                trainSpeed.getTooltipNameComponent(),
-                                trainSpeed.getBpsTooltipComponent(1),
-                                trainSpeed.getBpsTooltipComponent(2),
-                                ScreenUtils.Tooltip.switchStateComponent()
-                        ), mouseX, mouseY);
+            row = 0;
+            for (var triStateButton : cc$triStateButtons) {
+                if (mouseY > cc$sidebarTopY + (18 * row) && mouseY <= cc$sidebarTopY + (18 * row) + 15) {
+                    graphics.renderComponentTooltip(font, triStateButton.getTooltip(), mouseX, mouseY);
+                    break;
+                }
+                row++;
             }
         }
     }
 
     @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
     private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!cc$showLockButton) return;
+        if (cc$triStateButtons.isEmpty()) return;
         if (mouseX > cc$sidebarTopX && mouseX <= cc$sidebarTopX + 15) {
+            int row = 0;
             boolean buttonPressed = false;
 
-            if (mouseY > cc$sidebarTopY && mouseY <= cc$sidebarTopY + 15) {
-                buttonPressed = true;
-                cc$synced.cycleLock();
-                PacketDistributor.sendToServer(
-                        new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), cc$synced.getLock()));
-            } else if (mouseY > cc$sidebarTopY + 18 && mouseY <= cc$sidebarTopY + 33) {
-                buttonPressed = true;
-                cc$synced.cycleTrainSpeed();
-                // TODO - Speed button packet
+            for (var triStateButton : cc$triStateButtons) {
+                if (mouseY > cc$sidebarTopY + (18 * row) && mouseY <= cc$sidebarTopY + (18 * row) + 15) {
+                    if (triStateButton instanceof TrainMotionProfile motionProfile) {
+                        cc$triStateButtons.set(row, motionProfile.nextState());
+                        // TODO - Send packet back
+                    } else if (triStateButton instanceof TrainDisassemblyLock lock) {
+                        cc$triStateButtons.set(row, lock.nextState());
+                        PacketDistributor.sendToServer(
+                                new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), lock));
+                    }
+                    buttonPressed = true;
+                    break;
+                }
+                row++;
             }
             if (buttonPressed) {
                 SoundUtils.playButtonPress();
@@ -137,7 +135,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
             )
     )
     private void disassembleButtonActiveState(IconButton instance, boolean newValue, Operation<Void> original) {
-        original.call(instance, (!cc$isDisassembleButton(instance) || cc$synced.canPlayerDisassemble()) && newValue);
+        original.call(instance, (!cc$isDisassembleButton(instance) || cc$permissions.canDisassemble()) && newValue);
     }
 
     @WrapOperation(
@@ -149,21 +147,25 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     )
     private void disassembleButtonSetTooltip(IconButton instance, Component newTooltip, Operation<Void> original) {
         if (cc$isDisassembleButton(instance))
-            original.call(instance, cc$synced.canPlayerDisassemble() ? newTooltip :
+            original.call(instance, cc$permissions.canDisassemble() ? newTooltip :
                     Component.translatable("create_configured.message.train.disassembly_denied"));
         else
             original.call(instance, newTooltip);
     }
 
-    @Unique
-    public void cc$onSyncDisassemblyLock(boolean canPlayerDisassemble, TrainDisassemblyLock lock) {
-        cc$showLockButton = !isInSinglePlayer() && CCConfigs.server().lockTrainDisassembly.get() && cc$isTrainOwner();
-        cc$synced = new StationScreenSynced(canPlayerDisassemble, lock);
-        cc$syncedTrainInfo = true;
+    @Unique @Override
+    public void cc$onSync(TrainTweakPermissions permissions, TrainDisassemblyLock lock, TrainMotionProfile topSpeed, TrainMotionProfile acceleration) {
+        cc$triStateButtons.clear();
+        cc$showLock = !isInSinglePlayer() && CCConfigs.server().lockTrainDisassembly.get() && cc$isTrainOwner();
+        cc$permissions = permissions;
+
+        if (cc$showLock) cc$triStateButtons.add(lock);
+        if (permissions.canChangeTopSpeed()) cc$triStateButtons.add(topSpeed);
+        if (permissions.canChangeAcceleration()) cc$triStateButtons.add(acceleration);
+        cc$hasSynced = true;
     }
 
-    @Unique
-    @SuppressWarnings("DataFlowIssue")
+    @Unique @SuppressWarnings("DataFlowIssue")
     private boolean cc$isTrainOwner() {
         if (displayedTrain.get() != null) {
             var trainOwnerUuid = displayedTrain.get().owner;

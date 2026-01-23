@@ -1,5 +1,8 @@
 package dev.sleepy_evelyn.create_configured.utils;
 
+import com.simibubi.create.content.trains.station.StationScreen;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.TrainTweaksSynced;
+import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,6 +18,12 @@ public class ScreenUtils {
     public static <T extends Screen> Optional<T> getIfInstance(Class<T> clazz) {
         var screen = getCurrentScreen();
         return clazz.isInstance(screen) ? Optional.of(clazz.cast(screen)) : Optional.empty();
+    }
+
+    public static void syncStationScreen(StationScreenSyncPayload payload) {
+        ScreenUtils.getIfInstance(StationScreen.class).ifPresent(stationScreen ->
+                ((TrainTweaksSynced) stationScreen).cc$onSync(payload.permissions(), payload.lock(),
+                        payload.topSpeed(), payload.acceleration()));
     }
 
     public static class Tooltip {

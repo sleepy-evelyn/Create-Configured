@@ -2,9 +2,9 @@ package dev.sleepy_evelyn.create_configured.network;
 
 import dev.sleepy_evelyn.create_configured.CreateConfigured;
 import dev.sleepy_evelyn.create_configured.CreateConfiguredClient;
-import dev.sleepy_evelyn.create_configured.gui.StationScreenSynced;
 import dev.sleepy_evelyn.create_configured.network.s2c.GroupsProviderIdPayload;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
+import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -21,7 +21,6 @@ public final class CCClientboundPackets {
                         CreateConfiguredClient.groupsProviderId = payload.providerId());
 
         registrar.playToClient(StationScreenSyncPayload.TYPE, StationScreenSyncPayload.STREAM_CODEC,
-                (payload, ctx) ->
-                        StationScreenSynced.syncScreen(payload));
+                (payload, ctx) -> ScreenUtils.syncStationScreen(payload));
     }
 }

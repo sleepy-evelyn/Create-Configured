@@ -1,6 +1,6 @@
 package dev.sleepy_evelyn.create_configured.config;
 
-import dev.sleepy_evelyn.create_configured.config.nested.TrainSpeedsConfig;
+import dev.sleepy_evelyn.create_configured.config.nested.TrainTweaksConfig;
 import net.createmod.catnip.config.ConfigBase;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,8 +15,11 @@ public class CCServerConfig extends ConfigBase {
     public final ConfigBool lockTrainDisassembly = b(true, "lockTrainDisassembly",
             "Allows players to lock train disassembly for individual trains. (Ignored in Singleplayer)");
 
-    public final TrainSpeedsConfig trainSpeedOptions = nested(0, TrainSpeedsConfig::new,
-            "Additional Train speed options");
+    public final ConfigBool increaseMaxETATime = b(true, "increaseMaxETATime",
+            "Increases max ETA time shown for Scheduled Trains on Display Boards from 10 mins to 60 mins");
+
+    public final TrainTweaksConfig trainTweaksConfig = nested(0, TrainTweaksConfig::new,
+            "Train Stat Tweaks");
 
     /*public final ConfigBool requestLoopedSchedules = b(true, "requestLoopedSchedules",
             "Require manual approval for looping schedules");*/
