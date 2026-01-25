@@ -4,18 +4,21 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.trains.station.*;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import dev.sleepy_evelyn.create_configured.CreateConfigured;
 import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
 import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
-import dev.sleepy_evelyn.create_configured.config.CCConfigs;
+import dev.sleepy_evelyn.create_configured.compat.Mods;
 import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.TrainTweaksSynced;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
+import dev.sleepy_evelyn.create_configured.network.c2s.ChangeMotionProfilePayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
 import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
 import dev.sleepy_evelyn.create_configured.utils.SoundUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.objectweb.asm.Opcodes;
@@ -27,7 +30,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.List;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfiguredClient.isInSinglePlayer;
 
@@ -37,7 +42,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     @Unique private static final String CC$DISASSEMBLY_BUTTON_TAG = "disassemble_train";
 
     @Unique private int cc$sidebarTopX, cc$sidebarTopY;
-    @Unique private boolean cc$wasTrainPresent = false, cc$showLock = false, cc$hasSynced = false;
+    @Unique private boolean cc$wasTrainPresent = false;
 
     @Unique private TrainTweakPermissions cc$permissions = new TrainTweakPermissions();
     @Unique private final List<TriStateButton> cc$triStateButtons = new LinkedList<>();
@@ -50,21 +55,34 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     @Inject(method = "init()V", at = @At("TAIL"))
     private void StationScreen(CallbackInfo ci) {
         ((GuiTaggable) disassembleTrainButton).cc$setTag(CC$DISASSEMBLY_BUTTON_TAG);
+
+        Mods.RAILWAYS.version()
+                .filter(version -> !version.contains("0.1.0-rc") && !version.contains("0.1.0-beta"))
+                .ifPresent(v -> cc$removeRailwaysLimitCheckbox());
+    }
+
+    @Unique
+    private void cc$removeRailwaysLimitCheckbox() {
+        try {
+            Class<?> mixinClass = this.getClass();
+            Field limitCheckboxField = mixinClass.getDeclaredField("railways$limitCheckbox");
+            limitCheckboxField.setAccessible(true);
+
+            ((Checkbox) limitCheckboxField.get(this)).visible = false;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            CreateConfigured.LOGGER.error("Failed to remove limit checkbox from {}", Mods.RAILWAYS.modName(), e);
+        }
     }
 
     @Inject(method = "tickTrainDisplay", at = @At("HEAD"))
     private void tickTrainDisplay(CallbackInfo ci) {
         boolean trainPresent = trainPresent();
 
-        if (isInSinglePlayer() || !CCConfigs.server().lockTrainDisassembly.get() || !trainPresent)
-            cc$showLock = false;
-        else {
-            if (!cc$wasTrainPresent) // If a new Train has arrived, request new data.
-                PacketDistributor.sendToServer(new NotifyTrainAtStation(blockEntity.getBlockPos()));
-            else if (cc$hasSynced) {
-                cc$showLock = cc$isTrainOwner();
-            }
-        }
+        if (trainPresent && !cc$wasTrainPresent) // If a new Train has arrived, request new data.
+            PacketDistributor.sendToServer(new NotifyTrainAtStation(blockEntity.getBlockPos()));
+        else if (!trainPresent && cc$wasTrainPresent)
+            cc$triStateButtons.clear();
+
         cc$wasTrainPresent = trainPresent;
     }
 
@@ -77,22 +95,22 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     )
     private void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (cc$triStateButtons.isEmpty()) return;
-        cc$sidebarTopX = guiLeft + 173;
-        cc$sidebarTopY = guiTop + 40;
+        cc$sidebarTopX = guiLeft + 98;
+        cc$sidebarTopY = guiTop + 104;
 
-        int row = 0;
+        int column = 0;
         for (var button : cc$triStateButtons) {
-            button.getTexture().render(graphics, cc$sidebarTopX, cc$sidebarTopY + (18 * row));
-            row++;
+            button.getTexture().render(graphics, cc$sidebarTopX + (19 * column), cc$sidebarTopY);
+            column++;
         }
-        if (mouseX > cc$sidebarTopX && mouseX <= cc$sidebarTopX + 15) {
-            row = 0;
+        if (mouseY > cc$sidebarTopY && mouseY <= cc$sidebarTopY + 15) {
+            column = 0;
             for (var triStateButton : cc$triStateButtons) {
-                if (mouseY > cc$sidebarTopY + (18 * row) && mouseY <= cc$sidebarTopY + (18 * row) + 15) {
+                if (mouseX > cc$sidebarTopX + (19 * column) && mouseX <= cc$sidebarTopX + (19 * column) + 15) {
                     graphics.renderComponentTooltip(font, triStateButton.getTooltip(), mouseX, mouseY);
                     break;
                 }
-                row++;
+                column++;
             }
         }
     }
@@ -100,24 +118,29 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
     private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (cc$triStateButtons.isEmpty()) return;
-        if (mouseX > cc$sidebarTopX && mouseX <= cc$sidebarTopX + 15) {
-            int row = 0;
+        if (mouseY > cc$sidebarTopY && mouseY <= cc$sidebarTopY + 15) {
+            int column = 0;
             boolean buttonPressed = false;
 
             for (var triStateButton : cc$triStateButtons) {
-                if (mouseY > cc$sidebarTopY + (18 * row) && mouseY <= cc$sidebarTopY + (18 * row) + 15) {
+                if (mouseX > cc$sidebarTopX + (19 * column) && mouseX <= cc$sidebarTopX + (19 * column) + 15) {
                     if (triStateButton instanceof TrainMotionProfile motionProfile) {
-                        cc$triStateButtons.set(row, motionProfile.nextState());
-                        // TODO - Send packet back
-                    } else if (triStateButton instanceof TrainDisassemblyLock lock) {
-                        cc$triStateButtons.set(row, lock.nextState());
+                        var nextMotionProfile = motionProfile.nextState();
+
+                        cc$triStateButtons.set(column, nextMotionProfile);
                         PacketDistributor.sendToServer(
-                                new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), lock));
+                                new ChangeMotionProfilePayload(blockEntity.getBlockPos(), nextMotionProfile));
+                    } else if (triStateButton instanceof TrainDisassemblyLock lock) {
+                        var nextLock = lock.nextState();
+
+                        cc$triStateButtons.set(column, nextLock);
+                        PacketDistributor.sendToServer(
+                                new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), lock.nextState()));
                     }
                     buttonPressed = true;
                     break;
                 }
-                row++;
+                column++;
             }
             if (buttonPressed) {
                 SoundUtils.playButtonPress();
@@ -156,13 +179,11 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     @Unique @Override
     public void cc$onSync(TrainTweakPermissions permissions, TrainDisassemblyLock lock, TrainMotionProfile topSpeed, TrainMotionProfile acceleration) {
         cc$triStateButtons.clear();
-        cc$showLock = !isInSinglePlayer() && CCConfigs.server().lockTrainDisassembly.get() && cc$isTrainOwner();
         cc$permissions = permissions;
 
-        if (cc$showLock) cc$triStateButtons.add(lock);
+        if (permissions.canDisassemble() && !isInSinglePlayer() && cc$isTrainOwner()) cc$triStateButtons.add(lock);
         if (permissions.canChangeTopSpeed()) cc$triStateButtons.add(topSpeed);
         if (permissions.canChangeAcceleration()) cc$triStateButtons.add(acceleration);
-        cc$hasSynced = true;
     }
 
     @Unique @SuppressWarnings("DataFlowIssue")

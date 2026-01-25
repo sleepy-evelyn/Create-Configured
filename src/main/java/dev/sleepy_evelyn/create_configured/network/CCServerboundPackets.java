@@ -6,6 +6,7 @@ import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayl
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeMotionProfilePayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
+import dev.sleepy_evelyn.create_configured.permissions.TrainPermissionChecks;
 import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -52,10 +53,15 @@ public final class CCServerboundPackets {
     }
 
     private static void changeMotionProfileHandler(ChangeMotionProfilePayload payload, IPayloadContext ctx) {
-        var level = ctx.player().level();
+        var serverPlayer = (ServerPlayer) ctx.player();
+        var level = serverPlayer.level();
 
-        getOwnedTrainFromStationPos(level, payload.stationPos()).ifPresent(train ->
-                ((TrainTweaks) train).cc$setMotionProfile(payload.topSpeed(), payload.acceleration()));
+        getOwnedTrainFromStationPos(level, payload.stationPos()).ifPresent(train -> {
+            var motionProfile = payload.motionProfile();
+
+            if(TrainPermissionChecks.canChangeMotionProfile(serverPlayer, motionProfile.getType()))
+                ((TrainTweaks) train).cc$setMotionProfile(payload.motionProfile());
+        });
     }
 
     private static void changeDisassemblyLockHandler(ChangeDisassemblyLockPayload payload, IPayloadContext ctx) {

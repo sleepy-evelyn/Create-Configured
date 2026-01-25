@@ -8,6 +8,6 @@ public class SoundUtils {
 
     public static void playButtonPress() {
         Minecraft.getInstance().getSoundManager()
-                .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1, 1));
+                .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1, 0.25f));
     }
 }

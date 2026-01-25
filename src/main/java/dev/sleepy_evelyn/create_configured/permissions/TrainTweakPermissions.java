@@ -1,15 +1,12 @@
 package dev.sleepy_evelyn.create_configured.permissions;
 
 import com.simibubi.create.content.trains.entity.Train;
-import dev.sleepy_evelyn.create_configured.config.CCConfigs;
+import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.server.permission.PermissionAPI;
 import org.jetbrains.annotations.NotNull;
-
-import static dev.sleepy_evelyn.create_configured.CreateConfigured.isDedicatedServer;
 
 public record TrainTweakPermissions(boolean canDisassemble, boolean canChangeTopSpeed, boolean canChangeAcceleration) {
 
@@ -26,13 +23,10 @@ public record TrainTweakPermissions(boolean canDisassemble, boolean canChangeTop
             );
 
     public static TrainTweakPermissions resolve(@NotNull ServerPlayer player, @NotNull Train train) {
-        var config = CCConfigs.server().trainTweaksConfig;
-        boolean canBypassTrainTweaks = !isDedicatedServer() ||
-                PermissionAPI.getPermission(player, CCPermissionNodes.BYPASS_TRAIN_TWEAKS);
-        boolean canChangeTopSpeed = canBypassTrainTweaks || config.canPlayerChangeMaxSpeed.get();
-        boolean canChangeAcceleration = canBypassTrainTweaks || config.canPlayerChangeAcceleration.get();
-
-        return new TrainTweakPermissions(TrainPermissionChecks.canDisassemble(player, train),
-                canChangeTopSpeed, canChangeAcceleration);
+        return new TrainTweakPermissions(
+                TrainPermissionChecks.canDisassemble(player, train),
+                TrainPermissionChecks.canChangeMotionProfile(player, TrainMotionProfile.Type.TOP_SPEED),
+                TrainPermissionChecks.canChangeMotionProfile(player, TrainMotionProfile.Type.ACCELERATION)
+        );
     }
 }

@@ -74,7 +74,8 @@ dependencies {
     if (load_optional_mods.toBoolean()) {
         localRuntime("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_tweaked_version}")
         localRuntime("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
-        localRuntime files("libs/railways-dev.jar")
+        localRuntime("maven.modrinth:create-steam-n-rails-${minecraft_version}:${snr_neoforge_version}+neoforge-mc${minecraft_version}")
+        localRuntime("maven.modrinth:blocks-bogies:${blocks_and_bogies}-1.21.1")
     }
 }
 

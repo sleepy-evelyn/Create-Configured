@@ -19,7 +19,7 @@ public class CCServerConfig extends ConfigBase {
             "Increases max ETA time shown for Scheduled Trains on Display Boards from 10 mins to 60 mins");
 
     public final TrainTweaksConfig trainTweaksConfig = nested(0, TrainTweaksConfig::new,
-            "Train Stat Tweaks");
+            "Train Motion Tweaks");
 
     /*public final ConfigBool requestLoopedSchedules = b(true, "requestLoopedSchedules",
             "Require manual approval for looping schedules");*/

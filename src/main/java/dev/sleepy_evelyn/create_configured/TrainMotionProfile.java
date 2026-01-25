@@ -1,5 +1,6 @@
 package dev.sleepy_evelyn.create_configured;
 
+import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CTrains;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
@@ -42,7 +43,7 @@ public enum TrainMotionProfile implements TriStateButton {
             ByteBufCodecs.idMapper(TrainMotionProfile.BY_ID, TrainMotionProfile::getId);
 
     public enum Type {
-        TOP_SPEED, TURNING_TOP_SPEED, ACCELERATION;
+        TOP_SPEED, ACCELERATION;
     }
 
     public enum Rate {
@@ -73,6 +74,7 @@ public enum TrainMotionProfile implements TriStateButton {
     }
 
     public Rate getRate() { return rate; }
+    public Type getType() { return type; }
 
     @Override
     public int getId() { return id; }
@@ -112,29 +114,28 @@ public enum TrainMotionProfile implements TriStateButton {
         return cachedTooltip;
     }
 
-    public float getMotionValue(boolean poweredTrain, boolean rounded) {
-        return getMotionValue(type, poweredTrain, rounded);
+    public float getMultiplier() {
+        if (rate == Rate.DEFAULT) return 1;
+        TrainTweaksConfig tsc = CCConfigs.server().trainTweaksConfig;
+        ConfigBase.ConfigFloat multiplier;
+
+        if (rate == Rate.FAST)
+            multiplier = (type == Type.TOP_SPEED) ? tsc.fastTopSpeedMultiplier : tsc.fastAccelerationMultiplier;
+        else
+            multiplier = (type == Type.TOP_SPEED) ? tsc.slowTopSpeedMultiplier : tsc.slowAccelerationMultiplier;
+
+        return multiplier.getF();
     }
 
-    public float getMotionValue(Type type, boolean poweredTrain, boolean rounded) {
+    public float getMotionValue(boolean poweredTrain, boolean rounded) {
         CTrains ct = AllConfigs.server().trains;
-        TrainTweaksConfig tsc = CCConfigs.server().trainTweaksConfig;
 
         float defaultValue = (switch (type) {
             case TOP_SPEED -> poweredTrain ? ct.poweredTrainTopSpeed : ct.trainTopSpeed;
-            case TURNING_TOP_SPEED -> poweredTrain ? ct.poweredTrainTurningTopSpeed : ct.trainTurningTopSpeed;
             case ACCELERATION -> poweredTrain ? ct.poweredTrainAcceleration : ct.trainAcceleration;
         }).getF();
 
-        ConfigBase.ConfigFloat multiplier;
-        if (rate == Rate.FAST)
-            multiplier = (type == Type.TOP_SPEED) ? tsc.fastTopSpeedMultiplier : tsc.fastAccelerationMultiplier;
-        else if (rate == Rate.SLOW)
-            multiplier = (type == Type.TOP_SPEED) ? tsc.slowTopSpeedMultiplier : tsc.slowAccelerationMultiplier;
-        else
-            return defaultValue;
-
-        float finalValue = defaultValue * multiplier.getF();
+        float finalValue = defaultValue * getMultiplier();
         return rounded ? Math.round(finalValue * 10) / 10f : finalValue;
     }
 }

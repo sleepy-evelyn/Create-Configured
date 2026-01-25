@@ -5,7 +5,7 @@ import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
 
 public interface TrainTweaks {
 
-    void cc$setMotionProfile(TrainMotionProfile topSpeed, TrainMotionProfile acceleration);
+    void cc$setMotionProfile(TrainMotionProfile motionProfile);
     void cc$setLock(TrainDisassemblyLock lock);
 
     TrainDisassemblyLock cc$getLock();

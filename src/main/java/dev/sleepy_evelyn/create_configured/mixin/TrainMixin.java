@@ -1,5 +1,6 @@
 package dev.sleepy_evelyn.create_configured.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
@@ -27,6 +28,21 @@ public class TrainMixin implements TrainTweaks {
     @Unique private TrainMotionProfile cc$topSpeed = TrainMotionProfile.DEFAULT_TOP_SPEED;
     @Unique private TrainMotionProfile cc$acceleration = TrainMotionProfile.DEFAULT_ACCELERATION;
 
+    @ModifyReturnValue(method = "maxSpeed", at = @At("RETURN"))
+    public float maxSpeed(float original) {
+        return original * cc$topSpeed.getMultiplier();
+    }
+
+    @ModifyReturnValue(method = "maxTurnSpeed", at = @At("RETURN"))
+    public float maxTurnSpeed(float original) {
+        return original * cc$topSpeed.getMultiplier();
+    }
+
+    @ModifyReturnValue(method = "acceleration", at = @At("RETURN"))
+    public float acceleration(float original) {
+        return original * cc$acceleration.getMultiplier();
+    }
+
     @Inject(method = "read", at = @At("TAIL"))
     private static void read(CompoundTag tag, HolderLookup.Provider registries, Map<UUID, TrackGraph> trackNetworks, DimensionPalette dimensions, CallbackInfoReturnable<Train> cir, @Local(name = "train") Train train) {
         TrainTweaks disassemblyLockable = (TrainTweaks) train;
@@ -41,7 +57,8 @@ public class TrainMixin implements TrainTweaks {
                 var topSpeedProfile = TrainMotionProfile.BY_ID.apply(motionProfile[0]);
                 var accelerationProfile = TrainMotionProfile.BY_ID.apply(motionProfile[1]);
 
-                disassemblyLockable.cc$setMotionProfile(topSpeedProfile, accelerationProfile);
+                disassemblyLockable.cc$setMotionProfile(topSpeedProfile);
+                disassemblyLockable.cc$setMotionProfile(accelerationProfile);
             }
         }
     }
@@ -55,9 +72,11 @@ public class TrainMixin implements TrainTweaks {
     }
 
     @Override public void cc$setLock(TrainDisassemblyLock lock) { cc$disassemblyLock = lock; }
-    @Override public void cc$setMotionProfile(TrainMotionProfile topSpeed, TrainMotionProfile acceleration) {
-        cc$topSpeed = topSpeed;
-        cc$acceleration = acceleration;
+    @Override public void cc$setMotionProfile(TrainMotionProfile motionProfile) {
+        if (motionProfile.getType() == TrainMotionProfile.Type.TOP_SPEED)
+            cc$topSpeed = motionProfile;
+        else if (motionProfile.getType() == TrainMotionProfile.Type.ACCELERATION)
+            cc$acceleration = motionProfile;
     }
 
     @Override public TrainMotionProfile cc$getTopSpeed() { return cc$topSpeed; }

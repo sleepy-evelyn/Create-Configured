@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfigured.rl;
 
-public record ChangeMotionProfilePayload(BlockPos stationPos, TrainMotionProfile topSpeed, TrainMotionProfile acceleration) implements CustomPacketPayload {
+public record ChangeMotionProfilePayload(BlockPos stationPos, TrainMotionProfile motionProfile) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<ChangeMotionProfilePayload> TYPE =
             new CustomPacketPayload.Type<>(rl("change_train_motion_profile"));
@@ -17,8 +17,7 @@ public record ChangeMotionProfilePayload(BlockPos stationPos, TrainMotionProfile
     public static final StreamCodec<FriendlyByteBuf, ChangeMotionProfilePayload> STREAM_CODEC =
             StreamCodec.composite(
                     BlockPos.STREAM_CODEC, ChangeMotionProfilePayload::stationPos,
-                    TrainMotionProfile.ID_STREAM_CODEC, ChangeMotionProfilePayload::topSpeed,
-                    TrainMotionProfile.ID_STREAM_CODEC, ChangeMotionProfilePayload::acceleration,
+                    TrainMotionProfile.ID_STREAM_CODEC, ChangeMotionProfilePayload::motionProfile,
                     ChangeMotionProfilePayload::new
             );
 

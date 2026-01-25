@@ -18,12 +18,15 @@ package dev.sleepy_evelyn.create_configured.compat;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.fml.loading.moddiscovery.ModFileInfo;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public enum Mods {
-    OPENPARTIESANDCLAIMS("Open Parties & Claims");
+    OPENPARTIESANDCLAIMS("Open Parties & Claims"),
+    RAILWAYS("Steam 'n' Rails Neoforge");
 
     private final String id;
     private final String modName;
@@ -39,15 +42,23 @@ public enum Mods {
 
     public String modName() { return modName; }
 
+    public Optional<String> version() {
+        return getModFile().map(ModFileInfo::versionString);
+    }
+
     public ResourceLocation rl(String path) {
         return ResourceLocation.fromNamespaceAndPath(id, path);
     }
 
     public Boolean isLoaded() {
-        return LoadingModList.get().getModFileById(id) != null;
+        return getModFile().isPresent();
     }
 
     public void executeIfInstalled(Supplier<Runnable> toExecute) {
         if (isLoaded()) toExecute.get().run();
+    }
+
+    private Optional<ModFileInfo> getModFile() {
+        return Optional.ofNullable(LoadingModList.get().getModFileById(id));
     }
 }

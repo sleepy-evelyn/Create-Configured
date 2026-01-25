@@ -24,7 +24,7 @@ public abstract class StationBlockEntityMixin {
             ),
             cancellable = true
     )
-    private void tryDisassembleTrain(@Nullable ServerPlayer sender, CallbackInfoReturnable<Boolean> cir, @Local Train train) {
+    private void tryDisassembleTrain(@Nullable ServerPlayer sender, CallbackInfoReturnable<Boolean> cir, @Local(name = "train") Train train) {
         if (!TrainPermissionChecks.canDisassemble(sender, train)) {
             if (sender != null)
                 sender.sendSystemMessage(Component.translatable("create_configured.message.train.disassembly_denied")
