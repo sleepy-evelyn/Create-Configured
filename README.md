@@ -4,7 +4,7 @@ Additional configuration options & improvements for Create & addons.
 
 [![Modrinth Badge](https://raw.githubusercontent.com/intergrav/devins-badges/7f68fe7afdbda525557fb41097594d2edccfda03/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/create-configured)
 ![Neoforge Badge](https://raw.githubusercontent.com/intergrav/devins-badges/7f68fe7afdbda525557fb41097594d2edccfda03/assets/cozy/supported/neoforge_vector.svg)
-![Create Badge](https://raw.githubusercontent.com/intergrav/devins-badges/7f68fe7afdbda525557fb41097594d2edccfda03/assets/cozy/requires/create_vector.svg)
+[![KoFi Badge](https://raw.githubusercontent.com/intergrav/devins-badges/7f68fe7afdbda525557fb41097594d2edccfda03/assets/cozy/donate/kofi-singular_vector.svg)](https://ko-fi.com/sleepyevelyn)
 
 ## Configuration options
 
