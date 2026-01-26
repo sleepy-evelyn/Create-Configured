@@ -3,6 +3,7 @@
   "package": "dev.sleepy_evelyn.create_configured.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CarriageContraptionEntityMixin",
     "SpoutBlockEntityMixin",
     "StationSummaryDisplaySourceMixin",
     "TrainMixin"

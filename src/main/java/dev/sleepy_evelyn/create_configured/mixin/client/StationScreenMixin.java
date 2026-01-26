@@ -11,6 +11,7 @@ import dev.sleepy_evelyn.create_configured.compat.Mods;
 import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.TrainTweaksSynced;
+import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeMotionProfilePayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
@@ -128,6 +129,9 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
                         var nextMotionProfile = motionProfile.nextState();
 
                         cc$triStateButtons.set(column, nextMotionProfile);
+                        if (displayedTrain.get() instanceof TrainTweaks trainTweaks)
+                            trainTweaks.cc$setMotionProfile(nextMotionProfile);
+
                         PacketDistributor.sendToServer(
                                 new ChangeMotionProfilePayload(blockEntity.getBlockPos(), nextMotionProfile));
                     } else if (triStateButton instanceof TrainDisassemblyLock lock) {
@@ -135,7 +139,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
 
                         cc$triStateButtons.set(column, nextLock);
                         PacketDistributor.sendToServer(
-                                new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), lock.nextState()));
+                                new ChangeDisassemblyLockPayload(blockEntity.getBlockPos(), nextLock));
                     }
                     buttonPressed = true;
                     break;

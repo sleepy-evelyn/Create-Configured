@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TrainTweaksConfig extends ConfigBase {
 
-    public final ConfigBool canPlayerChangeMaxSpeed = b(false, "canPlayerChangeMaxSpeed",
+    public final ConfigBool canPlayerChangeMaxSpeed = b(true, "canPlayerChangeMaxSpeed",
             "Should regular Players be allowed to change a Trains max speed. (Ignored in Singleplayer)");
 
     public final ConfigBool canPlayerChangeAcceleration = b(true, "canPlayerChangeAcceleration",
