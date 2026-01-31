@@ -51,17 +51,17 @@ public class TrainMixin implements TrainTweaks {
 
     @Inject(method = "burnFuel", at = @At("HEAD"), cancellable = true)
     private void modifyBurnTime(CallbackInfo ci) {
-        cc$fuelMultiplier = 0;
+        cc$fuelMultiplier = 1;
         if (fuelTicks > 0) {
             if (cc$acceleration != TrainMotionProfile.DEFAULT_ACCELERATION)
                 cc$fuelMultiplier += cc$acceleration == TrainMotionProfile.FAST_ACCELERATION ? 1 : -1;
             if (cc$topSpeed == TrainMotionProfile.FAST_TOP_SPEED)
                 cc$fuelMultiplier++;
 
-            if (cc$fuelMultiplier > 0) {
+            if (cc$fuelMultiplier > 1) {
                 fuelTicks = Math.max(0, fuelTicks - cc$fuelMultiplier);
                 ci.cancel();
-            } else if (cc$fuelMultiplier < 0) {
+            } else if (cc$fuelMultiplier <= 0) {
                 if (cc$fuelTicksSubCounter >= 1) {
                     fuelTicks--;
                     cc$fuelTicksSubCounter = 0;
