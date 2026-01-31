@@ -11,4 +11,5 @@ public interface TrainTweaks {
     TrainDisassemblyLock cc$getLock();
     TrainMotionProfile cc$getTopSpeed();
     TrainMotionProfile cc$getAcceleration();
+    int cc$getFuelMultiplier();
 }
