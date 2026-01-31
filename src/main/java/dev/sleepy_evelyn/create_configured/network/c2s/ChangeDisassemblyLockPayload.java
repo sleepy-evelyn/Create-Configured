@@ -1,6 +1,6 @@
 package dev.sleepy_evelyn.create_configured.network.c2s;
 
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

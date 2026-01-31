@@ -1,7 +1,7 @@
 package dev.sleepy_evelyn.create_configured.mixin_interfaces.server;
 
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
+import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 
 public interface TrainTweaks {
 

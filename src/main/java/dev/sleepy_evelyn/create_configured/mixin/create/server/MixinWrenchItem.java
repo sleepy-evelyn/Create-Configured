@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin.server;
+package dev.sleepy_evelyn.create_configured.mixin.create.server;
 
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer;

@@ -1,5 +1,6 @@
-package dev.sleepy_evelyn.create_configured;
+package dev.sleepy_evelyn.create_configured.trains;
 
+import dev.sleepy_evelyn.create_configured.CreateConfiguredClient;
 import dev.sleepy_evelyn.create_configured.gui.CCGuiTextures;
 import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
 import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
@@ -9,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;

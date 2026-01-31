@@ -17,13 +17,15 @@
   "create_configured.gui.station.train_acceleration.fast": "Fast Acceleration",
   "create_configured.gui.station.train_acceleration.default": "Default Acceleration",
   "create_configured.gui.station.train_acceleration.slow": "Slow Acceleration",
-  "create_configured.gui.station.train_acceleration.blocks_per_second_squared_1": "%s blocks/s^2 powered and",
-  "create_configured.gui.station.train_acceleration.blocks_per_second_squared_2": "%s blocks/s^2 driven manually.",
+  "create_configured.gui.station.train_acceleration.blocks_per_second_squared_1": "%s blocks/s powered and",
+  "create_configured.gui.station.train_acceleration.blocks_per_second_squared_2": "%s blocks/s² driven manually.",
   "create_configured.gui.tooltip.switch_state": "Click to switch state",
 
   "create_configured.permission.bypass_train_disassembly.title": "Bypass Train Disassembly Lock",
   "create_configured.permission.bypass_train_disassembly.description": "Allows bypassing the train disassembly lock if it's enabled",
 
+  "create_configured.message.prefix": "[Create Configured] ",
   "create_configured.message.train.disassembly_denied": "Can't disassemble train as you don't have permission from the owner",
-  "create_configured.message.train.lock_change_denied": "Can't change Disassembly Lock as you are not the Trains Owner"
+  "create_configured.message.train.lock_change_denied": "Can't change Disassembly Lock as you are not the Trains Owner",
+  "create_configured.message.config.secrets.no_schedule_request_discord_webhook": "Set a Discord Webhook URL in create-configured-secrets.toml to allow Looping Schedule requests."
 }

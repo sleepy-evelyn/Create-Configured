@@ -1,8 +1,8 @@
 package dev.sleepy_evelyn.create_configured.permissions;
 
 import com.simibubi.create.content.trains.entity.Train;
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
+import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import dev.sleepy_evelyn.create_configured.groups.MemberRank;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;

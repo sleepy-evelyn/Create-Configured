@@ -3,20 +3,20 @@
   "package": "dev.sleepy_evelyn.create_configured.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "CarriageContraptionEntityMixin",
-    "SpoutBlockEntityMixin",
-    "StationSummaryDisplaySourceMixin",
-    "TrainMixin"
+    "create.CarriageContraptionEntityMixin",
+    "create.SpoutBlockEntityMixin",
+    "create.StationSummaryDisplaySourceMixin",
+    "create.TrainMixin"
   ],
   "server": [
-    "server.MixinWrenchItem",
-    "server.StationBlockEntityMixin",
-    "server.TrainMixin"
+    "create.server.MixinWrenchItem",
+    "create.server.StationBlockEntityMixin",
+    "create.server.TrainMixin"
   ],
   "client": [
-    "client.IconButtonMixin",
-    "client.ScheduleScreenMixin",
-    "client.StationScreenMixin"
+    "create.client.IconButtonMixin",
+    "create.client.ScheduleScreenMixin",
+    "create.client.StationScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

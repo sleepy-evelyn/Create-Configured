@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin.client;
+package dev.sleepy_evelyn.create_configured.mixin.create.client;
 
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;

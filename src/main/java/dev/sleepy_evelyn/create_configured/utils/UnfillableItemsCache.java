@@ -6,7 +6,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-@EventBusSubscriber(modid = CreateConfigured.MOD_ID)
+@EventBusSubscriber
 public class UnfillableItemsCache extends TickedCacheSet<ResourceLocation> {
 
     public static final UnfillableItemsCache INSTANCE = new UnfillableItemsCache();

@@ -1,10 +1,9 @@
 package dev.sleepy_evelyn.create_configured.network.s2c;
 
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
+import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;

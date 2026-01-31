@@ -1,7 +1,7 @@
 package dev.sleepy_evelyn.create_configured.permissions;
 
 import com.simibubi.create.content.trains.entity.Train;
-import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
+import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

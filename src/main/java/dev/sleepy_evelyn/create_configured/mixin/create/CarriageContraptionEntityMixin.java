@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin;
+package dev.sleepy_evelyn.create_configured.mixin.create;
 
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;

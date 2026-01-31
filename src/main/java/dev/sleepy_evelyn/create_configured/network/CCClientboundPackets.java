@@ -12,7 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
-@EventBusSubscriber(modid = CreateConfigured.MOD_ID)
+@EventBusSubscriber
 public final class CCClientboundPackets {
 
     @SubscribeEvent

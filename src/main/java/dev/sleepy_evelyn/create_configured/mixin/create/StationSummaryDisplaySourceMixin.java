@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin;
+package dev.sleepy_evelyn.create_configured.mixin.create;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.api.behaviour.display.DisplaySource;

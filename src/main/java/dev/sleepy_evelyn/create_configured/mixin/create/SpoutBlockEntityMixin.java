@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin;
+package dev.sleepy_evelyn.create_configured.mixin.create;
 
 import com.simibubi.create.content.fluids.spout.FillingBySpout;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;

@@ -1,4 +1,4 @@
-package dev.sleepy_evelyn.create_configured.mixin.server;
+package dev.sleepy_evelyn.create_configured.mixin.create.server;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.trains.entity.Train;

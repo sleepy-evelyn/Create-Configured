@@ -16,6 +16,7 @@ repositories {
     mavenCentral() // Luckperms
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
+    maven { url = "https://maven.ithundxr.dev/releases" } // Numismatics
     maven { url = 'https://maven.fallenbreath.me/releases' } // Conditional Mixins
     maven { url = "https://api.modrinth.com/maven" } // Grief Logger
     maven {url = "https://cursemaven.com" } // SnR Neoforge (temporary)
@@ -66,17 +67,18 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    // Other
-    jarJar(implementation("me.fallenbreath:conditional-mixin-neoforge:${conditional_mixin_version}"))
+    // Optional Dependencies
+    compileOnly("dev.ithundxr.createnumismatics:CreateNumismatics-common-${minecraft_version}:${numismatics_version}+common-mc${minecraft_version}-build.${numismatics_snapshot_build}")
     compileOnly("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
 
-    // All optional dependencies
     if (load_optional_mods.toBoolean()) {
         localRuntime("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_tweaked_version}")
         localRuntime("maven.modrinth:open-parties-and-claims:neoforge-${minecraft_version}-${opac_version}")
         localRuntime("maven.modrinth:create-steam-n-rails-${minecraft_version}:${snr_neoforge_version}+neoforge-mc${minecraft_version}")
-        localRuntime("maven.modrinth:blocks-bogies:${blocks_and_bogies}-1.21.1")
+        localRuntime("maven.modrinth:numismatics:${numismatics_version}+neoforge-mc${minecraft_version}")
     }
+    // Conditional Mixins
+    jarJar(implementation("me.fallenbreath:conditional-mixin-neoforge:${conditional_mixin_version}"))
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

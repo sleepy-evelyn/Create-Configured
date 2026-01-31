@@ -1,12 +1,12 @@
-package dev.sleepy_evelyn.create_configured.mixin.client;
+package dev.sleepy_evelyn.create_configured.mixin.create.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.simibubi.create.content.trains.station.*;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import dev.sleepy_evelyn.create_configured.CreateConfigured;
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
+import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 import dev.sleepy_evelyn.create_configured.compat.Mods;
 import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
@@ -71,7 +71,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
 
             ((Checkbox) limitCheckboxField.get(this)).visible = false;
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            CreateConfigured.LOGGER.error("Failed to remove limit checkbox from {}", Mods.RAILWAYS.modName(), e);
+            CreateConfigured.logger.error("Failed to remove limit checkbox from {}", Mods.RAILWAYS.modName(), e);
         }
     }
 

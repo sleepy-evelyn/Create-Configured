@@ -1,13 +1,17 @@
 package dev.sleepy_evelyn.create_configured.network;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.content.trains.schedule.Schedule;
 import dev.sleepy_evelyn.create_configured.CreateConfigured;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeMotionProfilePayload;
+import dev.sleepy_evelyn.create_configured.network.c2s.LoopingScheduleActionPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
 import dev.sleepy_evelyn.create_configured.permissions.TrainPermissionChecks;
 import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
+import dev.sleepy_evelyn.create_configured.trains.DiscordSchedule;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,21 +26,29 @@ import java.util.Objects;
 import static dev.sleepy_evelyn.create_configured.CreateConfigured.isDedicatedServer;
 import static dev.sleepy_evelyn.create_configured.utils.TrainUtils.getOwnedTrainFromStationPos;
 
-@EventBusSubscriber(modid = CreateConfigured.MOD_ID)
+@EventBusSubscriber
 public final class CCServerboundPackets {
 
     @SubscribeEvent
     public static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent e) {
         var registrar = e.registrar("1");
 
+        registrar.playToServer(LoopingScheduleActionPayload.TYPE, LoopingScheduleActionPayload.STREAM_CODEC,
+                CCServerboundPackets::sendLoopingScheduleAction);
+
         registrar.playToServer(NotifyTrainAtStation.TYPE, NotifyTrainAtStation.STREAM_CODEC,
                 CCServerboundPackets::notifyTrainAtStationHandler);
 
-        registrar.playToServer(ChangeDisassemblyLockPayload.TYPE, ChangeDisassemblyLockPayload.STREAM_CODEC,
-                CCServerboundPackets::changeDisassemblyLockHandler);
-
         registrar.playToServer(ChangeMotionProfilePayload.TYPE, ChangeMotionProfilePayload.STREAM_CODEC,
                 CCServerboundPackets::changeMotionProfileHandler);
+
+        registrar.playToServer(ChangeDisassemblyLockPayload.TYPE, ChangeDisassemblyLockPayload.STREAM_CODEC,
+                CCServerboundPackets::changeDisassemblyLockHandler);
+    }
+
+    private static void sendLoopingScheduleAction(LoopingScheduleActionPayload payload, IPayloadContext ctx) {
+        var discordSchedule = new DiscordSchedule((ServerPlayer) ctx.player(), payload.schedule().entries);
+        discordSchedule.send();
     }
 
     private static void notifyTrainAtStationHandler(NotifyTrainAtStation payload, IPayloadContext ctx) {

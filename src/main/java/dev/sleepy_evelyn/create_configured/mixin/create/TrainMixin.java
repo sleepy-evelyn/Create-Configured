@@ -1,12 +1,14 @@
-package dev.sleepy_evelyn.create_configured.mixin;
+package dev.sleepy_evelyn.create_configured.mixin.create;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
-import dev.sleepy_evelyn.create_configured.TrainDisassemblyLock;
-import dev.sleepy_evelyn.create_configured.TrainMotionProfile;
+import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
+import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -29,18 +32,30 @@ public class TrainMixin implements TrainTweaks {
     @Unique private TrainMotionProfile cc$acceleration = TrainMotionProfile.DEFAULT_ACCELERATION;
 
     @ModifyReturnValue(method = "maxSpeed", at = @At("RETURN"))
-    public float maxSpeed(float original) {
+    private float maxSpeed(float original) {
         return original * cc$topSpeed.getMultiplier();
     }
 
     @ModifyReturnValue(method = "maxTurnSpeed", at = @At("RETURN"))
-    public float maxTurnSpeed(float original) {
+    private float maxTurnSpeed(float original) {
         return original * cc$topSpeed.getMultiplier();
     }
 
     @ModifyReturnValue(method = "acceleration", at = @At("RETURN"))
-    public float acceleration(float original) {
+    private float acceleration(float original) {
         return original * cc$acceleration.getMultiplier();
+    }
+
+    @Inject(
+            method = "burnFuel",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/neoforged/neoforge/items/IItemHandlerModifiable;extractItem(IIZ)Lnet/minecraft/world/item/ItemStack;",
+                    ordinal = 1
+            )
+    )
+    private void modifyBurnTime(CallbackInfo ci, @Local(name = "burnTime") LocalIntRef burnTime) {
+
     }
 
     @Inject(method = "read", at = @At("TAIL"))

@@ -1,6 +1,5 @@
-package dev.sleepy_evelyn.create_configured;
+package dev.sleepy_evelyn.create_configured.trains;
 
-import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CTrains;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
@@ -15,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;

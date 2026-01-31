@@ -11,7 +11,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = CreateConfigured.MOD_ID, dist = Dist.CLIENT)
-@EventBusSubscriber(modid = CreateConfigured.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class CreateConfiguredClient {
 
     public static String groupsProviderId = "none";

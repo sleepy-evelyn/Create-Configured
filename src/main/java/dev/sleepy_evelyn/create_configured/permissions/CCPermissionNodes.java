@@ -8,7 +8,7 @@ import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 
-@EventBusSubscriber(modid = CreateConfigured.MOD_ID)
+@EventBusSubscriber
 public final class CCPermissionNodes {
 
     public static final PermissionNode<Boolean> BYPASS_TRAIN_DISASSEMBLY = booleanNode("bypass_train_disassembly");
