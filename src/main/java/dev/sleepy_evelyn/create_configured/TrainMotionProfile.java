@@ -24,7 +24,7 @@ import java.util.function.IntFunction;
 
 public enum TrainMotionProfile implements TriStateButton {
 
-    SLOW_TOP_SPEED(0, Type.TOP_SPEED, Rate.SLOW),
+    SLOW_TOP_SPEED(0, Type.TOP_SPEED, Rate.SLOW), // Slow top speed is depreciated. Kept to maintain compatibility
     DEFAULT_TOP_SPEED(1, Type.TOP_SPEED, Rate.DEFAULT),
     FAST_TOP_SPEED(2, Type.TOP_SPEED, Rate.FAST),
 
@@ -82,9 +82,8 @@ public enum TrainMotionProfile implements TriStateButton {
     @Override
     public TrainMotionProfile nextState() {
         if (type == Type.TOP_SPEED) return switch(rate) {
-            case FAST -> TrainMotionProfile.SLOW_TOP_SPEED;
+            case FAST, SLOW -> TrainMotionProfile.DEFAULT_TOP_SPEED;
             case DEFAULT -> TrainMotionProfile.FAST_TOP_SPEED;
-            case SLOW -> TrainMotionProfile.DEFAULT_TOP_SPEED;
         };
         else return switch (rate) {
             case FAST -> TrainMotionProfile.SLOW_ACCELERATION;
@@ -103,28 +102,30 @@ public enum TrainMotionProfile implements TriStateButton {
         String prefix = "create_configured.gui.station.train_";
         cachedTooltip.add(Component.translatable(prefix + typeKey + "." + rateKey));
 
-        prefix = prefix + typeKey + ".blocks_per_second" + (type == Type.ACCELERATION ? "_squared_" : "_");
+        String bpsPrefix = prefix + typeKey + ".blocks_per_second" + (type == Type.ACCELERATION ? "_squared_" : "_");
         cachedTooltip.addAll(List.of(
-                Component.translatable(prefix + 1, getMotionValue( true, true))
+                Component.translatable(bpsPrefix + 1, getMotionValue( true, true))
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable(prefix + 2, getMotionValue(false, true))
-                        .withStyle(ChatFormatting.GRAY),
-                ScreenUtils.Tooltip.switchStateComponent()
+                Component.translatable(bpsPrefix + 2, getMotionValue(false, true))
+                        .withStyle(ChatFormatting.GRAY)
         ));
+        if (rate != Rate.DEFAULT)
+            cachedTooltip.add(Component.translatable(prefix + "fuel_consumption." + rateKey)
+                    .withStyle(rate == Rate.SLOW ? ChatFormatting.GREEN : ChatFormatting.RED));
+
+        cachedTooltip.add(ScreenUtils.Tooltip.switchStateComponent());
         return cachedTooltip;
     }
 
-    public float getMultiplier() {
-        if (rate == Rate.DEFAULT) return 1;
+    public float getMultiplier(boolean poweredTrain) {
+        if (rate == Rate.DEFAULT || (rate == Rate.FAST && !poweredTrain)) return 1;
         TrainTweaksConfig tsc = CCConfigs.server().trainTweaksConfig;
-        ConfigBase.ConfigFloat multiplier;
+        float multiplier;
 
         if (rate == Rate.FAST)
-            multiplier = (type == Type.TOP_SPEED) ? tsc.fastTopSpeedMultiplier : tsc.fastAccelerationMultiplier;
+            return type == Type.TOP_SPEED ? tsc.fastTopSpeedMultiplier.getF() : tsc.fastAccelerationMultiplier.getF();
         else
-            multiplier = (type == Type.TOP_SPEED) ? tsc.slowTopSpeedMultiplier : tsc.slowAccelerationMultiplier;
-
-        return multiplier.getF();
+            return type == Type.TOP_SPEED ? 1 : tsc.slowAccelerationMultiplier.getF();
     }
 
     public float getMotionValue(boolean poweredTrain, boolean rounded) {
@@ -135,7 +136,7 @@ public enum TrainMotionProfile implements TriStateButton {
             case ACCELERATION -> poweredTrain ? ct.poweredTrainAcceleration : ct.trainAcceleration;
         }).getF();
 
-        float finalValue = defaultValue * getMultiplier();
+        float finalValue = defaultValue * getMultiplier(poweredTrain);
         return rounded ? Math.round(finalValue * 10) / 10f : finalValue;
     }
 }

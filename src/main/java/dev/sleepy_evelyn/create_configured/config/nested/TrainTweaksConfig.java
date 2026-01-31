@@ -11,10 +11,7 @@ public class TrainTweaksConfig extends ConfigBase {
     public final ConfigBool canPlayerChangeAcceleration = b(true, "canPlayerChangeAcceleration",
             "Should regular Players be allowed to change a Trains acceleration. (Ignored in Singleplayer)");
 
-    public final ConfigFloat slowTopSpeedMultiplier = f(.5f, 0f, 1f, "slowTopSpeedMultiplier",
-            "Top speed multiplier for slow Trains.");
-
-    public final ConfigFloat fastTopSpeedMultiplier = f(1.75f, 1f,  "fastTopSpeedMultiplier",
+    public final ConfigFloat fastTopSpeedMultiplier = f(1.5f, 1f,  "fastTopSpeedMultiplier",
             "Top speed multiplier for fast Trains.");
 
     public final ConfigFloat slowAccelerationMultiplier = f(.5f, 0f, 1f, "slowAccelerationMultiplier",
