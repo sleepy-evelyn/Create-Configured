@@ -6,26 +6,30 @@ Additional configuration options & improvements for Create & addons.
 ![Neoforge Badge](https://raw.githubusercontent.com/intergrav/devins-badges/7f68fe7afdbda525557fb41097594d2edccfda03/assets/cozy/supported/neoforge_vector.svg)
 [![KoFi Badge](https://raw.githubusercontent.com/intergrav/devins-badges/7f68fe7afdbda525557fb41097594d2edccfda03/assets/cozy/donate/kofi-singular_vector.svg)](https://ko-fi.com/sleepyevelyn)
 
-## Configuration options
+----
+
+# Create Configured
+Additional configuration options & improvements for Create & addons.
+- ⏱️ **Increase Max ETA Time** - Increase the estimated time of arrival displayed for Trains from 10 > 60 minutes.
 
 - 🚂💥 **Train collisions** - Disable collisions between trains. Massively improves performance on modded servers.
 
-- ⏱️ **Increase Max ETA Time** - Increase the estimated time of arrival displayed for Trains from 10 > 60 minutes.
-
-- 🚄💨 **Train Motion Tweaks** - Configurable Top Speed & Acceleration for individual trains which can be changed within a Stations GUI.
-
 - 🚰 **Cache unfillable items** - Introduces a cache for items that can't be used in Spout filling recipes. Provides better performance at scale especially if Create is combined with other mods like AE2.
 
+## Train motion profiles
+Configurable Top Speed & Acceleration for individual trains which can be changed within a Stations GUI.
+
+- ⛽ **Fuel consumption** - The rate of fuel consumption doubles if a train is given a higher Top Speed / Acceleration. Consumption halves if given a slower Acceleration.
 
 ## Train disassembly lock
 You can now prevent other players or groups from disassembling a train.
 
 - 🔧 **Unique to each train** - A disassembly lock is unique to each train and can be set whilst a train is at a station
-
+  
 - 🧑‍🤝‍🧑 **OPAC support** - Supports Open Parties & Claims. Includes a lock setting which only allows members of the same party to disassemble your train.
-
+  
 - ⚠️ **Staff bypasss option** - Staff members with `/op` and groups with permission node `create_configured.bypass_train_disassembly` can bypass any lock.
-
+  
 - 🛡️ **SnR & CC:Tweaked integration** - Provides computers and deployers holding a wrench with the context required to disassemble a train safely, respecting the disassembly lock.
 
 ## Q&A
