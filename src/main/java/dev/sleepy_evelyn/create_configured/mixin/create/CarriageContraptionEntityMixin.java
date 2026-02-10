@@ -3,7 +3,7 @@ package dev.sleepy_evelyn.create_configured.mixin.create;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;
-import dev.sleepy_evelyn.create_configured.network.s2c.TrainHUDTopSpeedPacket;
+import dev.sleepy_evelyn.create_configured.network.s2c.TrainHUDTopSpeedPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +23,6 @@ public class CarriageContraptionEntityMixin {
     public void startControlling(BlockPos controlsLocalPos, Player player, CallbackInfoReturnable<Boolean> cir) {
         if (player instanceof ServerPlayer serverPlayer)
             PacketDistributor.sendToPlayer(serverPlayer,
-                    new TrainHUDTopSpeedPacket(carriage.train.id, ((TrainTweaks) carriage.train).cc$getTopSpeed()));
+                    new TrainHUDTopSpeedPayload(carriage.train.id, ((TrainTweaks) carriage.train).cc$getTopSpeed()));
     }
 }

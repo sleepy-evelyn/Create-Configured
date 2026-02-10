@@ -4,7 +4,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
-public interface TriStateButton {
+public interface MultiStateButton {
     int getId();
     Object nextState();
     CCGuiTextures getTexture();

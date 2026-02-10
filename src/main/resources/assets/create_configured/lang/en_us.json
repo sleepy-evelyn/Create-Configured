@@ -9,6 +9,7 @@
   "create_configured.gui.station.disassembly_lock.not_locked.description": "Any Player can disassemble this train",
   "create_configured.gui.station.disassembly_lock.party_members.title": "Train disassembly limited to Party Members",
   "create_configured.gui.station.disassembly_lock.party_members.description": "Only Yourself and Party Members can disassemble this train",
+
   "create_configured.gui.station.train_top_speed.fast": "Fast Top Speed",
   "create_configured.gui.station.train_top_speed.default": "Default Top Speed",
   "create_configured.gui.station.train_top_speed.slow": "Slow Top Speed",
@@ -21,7 +22,11 @@
   "create_configured.gui.station.train_acceleration.blocks_per_second_squared_2": "%s blocks/s² unpowered",
   "create_configured.gui.station.train_fuel_consumption.fast": "Increases fuel consumption",
   "create_configured.gui.station.train_fuel_consumption.slow": "Decreases fuel consumption",
+
   "create_configured.gui.tooltip.switch_state": "Click to switch state",
+  "create_configured.gui.overlay.looping_schedule.selecting_trains": "",
+  "create_configured.gui.overlay.looping_schedule.train_selected": "Train added to this schedule ➕",
+  "create_configured.gui.overlay.looping_schedule.finished": "",
 
   "create_configured.permission.bypass_train_disassembly.title": "Bypass Train Disassembly Lock",
   "create_configured.permission.bypass_train_disassembly.description": "Allows bypassing the train disassembly lock if it's enabled",

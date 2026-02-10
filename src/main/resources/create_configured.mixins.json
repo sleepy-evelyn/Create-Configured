@@ -14,6 +14,7 @@
     "create.server.TrainMixin"
   ],
   "client": [
+    "GuiAccessor",
     "create.client.IconButtonMixin",
     "create.client.ScheduleScreenMixin",
     "create.client.StationScreenMixin"

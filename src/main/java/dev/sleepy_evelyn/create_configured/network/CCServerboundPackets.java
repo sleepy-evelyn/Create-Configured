@@ -1,18 +1,16 @@
 package dev.sleepy_evelyn.create_configured.network;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.schedule.Schedule;
-import dev.sleepy_evelyn.create_configured.CreateConfigured;
+import com.simibubi.create.content.trains.schedule.ScheduleItem;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeMotionProfilePayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.LoopingScheduleActionPayload;
-import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
+import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStationPayload;
 import dev.sleepy_evelyn.create_configured.network.s2c.StationScreenSyncPayload;
 import dev.sleepy_evelyn.create_configured.permissions.TrainPermissionChecks;
 import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
-import dev.sleepy_evelyn.create_configured.trains.DiscordSchedule;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -36,7 +34,7 @@ public final class CCServerboundPackets {
         registrar.playToServer(LoopingScheduleActionPayload.TYPE, LoopingScheduleActionPayload.STREAM_CODEC,
                 CCServerboundPackets::sendLoopingScheduleAction);
 
-        registrar.playToServer(NotifyTrainAtStation.TYPE, NotifyTrainAtStation.STREAM_CODEC,
+        registrar.playToServer(NotifyTrainAtStationPayload.TYPE, NotifyTrainAtStationPayload.STREAM_CODEC,
                 CCServerboundPackets::notifyTrainAtStationHandler);
 
         registrar.playToServer(ChangeMotionProfilePayload.TYPE, ChangeMotionProfilePayload.STREAM_CODEC,
@@ -47,11 +45,20 @@ public final class CCServerboundPackets {
     }
 
     private static void sendLoopingScheduleAction(LoopingScheduleActionPayload payload, IPayloadContext ctx) {
-        var discordSchedule = new DiscordSchedule((ServerPlayer) ctx.player(), payload.schedule().entries);
-        discordSchedule.send();
+        switch (payload.action()) {
+            case START -> {
+                var player = ctx.player();
+                var useItemStack = player.getMainHandItem();
+
+                if (useItemStack.getItem() instanceof ScheduleItem) {
+                    useItemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+
+                }
+            }
+        }
     }
 
-    private static void notifyTrainAtStationHandler(NotifyTrainAtStation payload, IPayloadContext ctx) {
+    private static void notifyTrainAtStationHandler(NotifyTrainAtStationPayload payload, IPayloadContext ctx) {
         var level = ctx.player().level();
 
         getOwnedTrainFromStationPos(level, payload.stationPos()).ifPresent(train -> {

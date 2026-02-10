@@ -9,14 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfigured.rl;
 
-public record LoopingScheduleActionPayload(Schedule schedule, LoopingScheduleAction action) implements CustomPacketPayload {
+public record LoopingScheduleActionPayload(LoopingScheduleAction action) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<LoopingScheduleActionPayload> TYPE =
             new CustomPacketPayload.Type<>(rl("looping_schedule_action"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, LoopingScheduleActionPayload> STREAM_CODEC =
             StreamCodec.composite(
-                    Schedule.STREAM_CODEC, LoopingScheduleActionPayload::schedule,
                     LoopingScheduleAction.ID_STREAM_CODEC, LoopingScheduleActionPayload::action,
                     LoopingScheduleActionPayload::new
             );

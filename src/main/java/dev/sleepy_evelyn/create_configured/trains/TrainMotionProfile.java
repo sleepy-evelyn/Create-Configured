@@ -5,10 +5,9 @@ import com.simibubi.create.infrastructure.config.CTrains;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import dev.sleepy_evelyn.create_configured.config.nested.TrainTweaksConfig;
 import dev.sleepy_evelyn.create_configured.gui.CCGuiTextures;
-import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
+import dev.sleepy_evelyn.create_configured.gui.MultiStateButton;
 import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
 import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.IntFunction;
 
-public enum TrainMotionProfile implements TriStateButton {
+public enum TrainMotionProfile implements MultiStateButton {
 
     SLOW_TOP_SPEED(0, Type.TOP_SPEED, Rate.SLOW), // Slow top speed is depreciated. Kept to maintain compatibility
     DEFAULT_TOP_SPEED(1, Type.TOP_SPEED, Rate.DEFAULT),

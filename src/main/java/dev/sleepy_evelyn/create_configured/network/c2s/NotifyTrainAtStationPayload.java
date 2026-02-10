@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 
 import static dev.sleepy_evelyn.create_configured.CreateConfigured.rl;
 
-public record NotifyTrainAtStation(BlockPos stationPos) implements CustomPacketPayload {
+public record NotifyTrainAtStationPayload(BlockPos stationPos) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<NotifyTrainAtStation> TYPE =
+    public static final CustomPacketPayload.Type<NotifyTrainAtStationPayload> TYPE =
             new CustomPacketPayload.Type<>(rl("notify_train_at_station"));
 
-    public static final StreamCodec<FriendlyByteBuf, NotifyTrainAtStation> STREAM_CODEC =
+    public static final StreamCodec<FriendlyByteBuf, NotifyTrainAtStationPayload> STREAM_CODEC =
             StreamCodec.composite(
-                    BlockPos.STREAM_CODEC, NotifyTrainAtStation::stationPos,
-                    NotifyTrainAtStation::new
+                    BlockPos.STREAM_CODEC, NotifyTrainAtStationPayload::stationPos,
+                    NotifyTrainAtStationPayload::new
             );
 
     @Override

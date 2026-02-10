@@ -26,12 +26,12 @@ public class CCServerConfig extends ConfigBase {
     public final TrainTweaksConfig trainTweaksConfig = nested(0, TrainTweaksConfig::new,
             "Train Motion Tweaks");
 
-    /*public final LoopingSchedulesConfig loopingSchedulesConfig = nested(0, LoopingSchedulesConfig::new,
+    public final LoopingSchedulesConfig loopingSchedulesConfig = nested(0, LoopingSchedulesConfig::new,
             "Looping Schedule Requests",
             "(Ignored in Singleplayer)");
 
     public final NumismaticsConfig numismaticsConfig = nested(0, NumismaticsConfig::new,
-            "Numismatics");*/
+            "Numismatics");
 
 
     @Override

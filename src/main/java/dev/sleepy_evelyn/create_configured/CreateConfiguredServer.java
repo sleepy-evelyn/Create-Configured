@@ -6,12 +6,11 @@ import dev.sleepy_evelyn.create_configured.compat.opac.OPACGroupProvider;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import dev.sleepy_evelyn.create_configured.groups.GroupsProvider;
 import dev.sleepy_evelyn.create_configured.network.s2c.GroupsProviderIdPayload;
-import dev.sleepy_evelyn.create_configured.utils.TaskTicker;
-import io.netty.util.concurrent.SingleThreadEventExecutor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -23,8 +22,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Mod(value = CreateConfigured.MOD_ID, dist = Dist.DEDICATED_SERVER)
 @EventBusSubscriber(value = Dist.DEDICATED_SERVER)
@@ -38,7 +35,7 @@ public class CreateConfiguredServer {
     }
 
     private static void onConfigReloaded(MinecraftServer server) {
-        /*var loopingSchedulesConfig = CCConfigs.server().loopingSchedulesConfig;
+        var loopingSchedulesConfig = CCConfigs.server().loopingSchedulesConfig;
         var requestLoopingSchedules = loopingSchedulesConfig.requestLoopingSchedules.get();
 
         if (!requestLoopingSchedules) return;
@@ -55,7 +52,7 @@ public class CreateConfiguredServer {
                                 .withStyle(ChatFormatting.BLUE).append(
                                 Component.translatable("create_configured.message.config.secrets." +
                                         "no_schedule_request_discord_webhook").withStyle(ChatFormatting.GRAY)));
-        });*/
+        });
     }
 
     @SubscribeEvent

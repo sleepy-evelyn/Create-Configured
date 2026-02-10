@@ -2,7 +2,7 @@ package dev.sleepy_evelyn.create_configured.trains;
 
 import dev.sleepy_evelyn.create_configured.CreateConfiguredClient;
 import dev.sleepy_evelyn.create_configured.gui.CCGuiTextures;
-import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
+import dev.sleepy_evelyn.create_configured.gui.MultiStateButton;
 import dev.sleepy_evelyn.create_configured.utils.ScreenUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.IntFunction;
 
-public enum TrainDisassemblyLock implements TriStateButton {
+public enum TrainDisassemblyLock implements MultiStateButton {
 
     LOCKED(0, CCGuiTextures.TRAIN_DISASSEMBLY_LOCK_CLOSED),
     NOT_LOCKED(1, CCGuiTextures.TRAIN_DISASSEMBLY_LOCK_OPEN),

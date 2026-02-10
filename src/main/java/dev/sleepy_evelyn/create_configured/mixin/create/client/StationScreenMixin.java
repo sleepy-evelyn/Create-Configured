@@ -8,13 +8,13 @@ import dev.sleepy_evelyn.create_configured.CreateConfigured;
 import dev.sleepy_evelyn.create_configured.trains.TrainDisassemblyLock;
 import dev.sleepy_evelyn.create_configured.trains.TrainMotionProfile;
 import dev.sleepy_evelyn.create_configured.compat.Mods;
-import dev.sleepy_evelyn.create_configured.gui.TriStateButton;
+import dev.sleepy_evelyn.create_configured.gui.MultiStateButton;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.GuiTaggable;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.client.TrainTweaksSynced;
 import dev.sleepy_evelyn.create_configured.mixin_interfaces.server.TrainTweaks;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeDisassemblyLockPayload;
 import dev.sleepy_evelyn.create_configured.network.c2s.ChangeMotionProfilePayload;
-import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStation;
+import dev.sleepy_evelyn.create_configured.network.c2s.NotifyTrainAtStationPayload;
 import dev.sleepy_evelyn.create_configured.permissions.TrainTweakPermissions;
 import dev.sleepy_evelyn.create_configured.utils.SoundUtils;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
     @Unique private boolean cc$wasTrainPresent = false;
 
     @Unique private TrainTweakPermissions cc$permissions = new TrainTweakPermissions();
-    @Unique private final List<TriStateButton> cc$triStateButtons = new LinkedList<>();
+    @Unique private final List<MultiStateButton> cc$triStateButtons = new LinkedList<>();
     @Shadow private IconButton disassembleTrainButton;
 
     public StationScreenMixin(StationBlockEntity be, GlobalStation station) {
@@ -80,7 +80,7 @@ public abstract class StationScreenMixin extends AbstractStationScreen implement
         boolean trainPresent = trainPresent();
 
         if (trainPresent && !cc$wasTrainPresent) // If a new Train has arrived, request new data.
-            PacketDistributor.sendToServer(new NotifyTrainAtStation(blockEntity.getBlockPos()));
+            PacketDistributor.sendToServer(new NotifyTrainAtStationPayload(blockEntity.getBlockPos()));
         else if (!trainPresent && cc$wasTrainPresent)
             cc$triStateButtons.clear();
 

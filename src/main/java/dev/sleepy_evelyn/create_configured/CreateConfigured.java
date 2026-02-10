@@ -3,6 +3,8 @@ package dev.sleepy_evelyn.create_configured;
 import com.mojang.logging.LogUtils;
 import dev.sleepy_evelyn.create_configured.config.CCConfigs;
 import dev.sleepy_evelyn.create_configured.utils.TaskTicker;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
@@ -29,12 +31,13 @@ public class CreateConfigured {
         });
     }
 
-    private static void onConfigReloaded(MinecraftServer server) {
-
-    }
+    private static void onConfigReloaded(MinecraftServer server) {}
 
     public static ResourceLocation rl(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+    public static MutableComponent translatable(String path, Object... args) {
+        return Component.translatable(MOD_ID + "." + path, args);
     }
 
     public static boolean isDedicatedServer(Level level) {

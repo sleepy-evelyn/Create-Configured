@@ -8,10 +8,11 @@ import net.minecraft.util.ByIdMap;
 import java.util.function.IntFunction;
 
 public enum LoopingScheduleAction {
-    APPROVE(0),
-    DENY(1),
-    NO_ACTION(2),
-    SEND(3);
+    START(0),
+    APPROVE(1),
+    DENY(2),
+    NO_ACTION(3),
+    SEND(4);
 
     public static final IntFunction<LoopingScheduleAction> BY_ID =
             ByIdMap.continuous(
